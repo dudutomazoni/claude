@@ -76,8 +76,12 @@ def main():
             classe = 'padrao' if nome_it.lower() in classes else 'atencao'
             campos = [CAMPOS.get(dd['tip_det_codigo'], dd['tipo_detalhe']['tip_det_nome'])
                       for dd in sorted(it.get('detalhe_descricao') or [], key=lambda x: x['det_des_ordem'])]
+            campos = [c for c in campos if c != 'Pintura']
+            sem_campos = not campos
+            if sem_campos:  # item veio do app sem campos: o gravar.py cria os que receberem valor
+                campos = ['Material', 'Cor', 'Estado', 'Avarias']
             tarefa['itens'].append({'n': n, 'amb_ite_codigo': it['amb_ite_codigo'], 'item': nome_it, 'qtd': it['amb_ite_quantidade'],
-                                    'classe': classe, 'campos': [c for c in campos if c != 'Pintura'], 'n_fotos': len(fotos),
+                                    'classe': classe, 'campos': campos, 'campos_novos': sem_campos, 'n_fotos': len(fotos),
                                     'notas': [n2['not_descricao'] for n2 in it.get('notas') or []]})
             pend[classe].append((n, nome_it, fotos))
         sem_itens = not itens_todos

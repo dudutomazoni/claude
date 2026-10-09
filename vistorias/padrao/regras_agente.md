@@ -15,7 +15,9 @@ O dono autorizou gravar o preenchimento sem aprovação prévia. Nunca apague na
 Rótulo de cada miniatura: `n.Item fk` = foto k do item n (use `n:k` no zoom); `amb fk` = foto k do cômodo (use `a:k`).
 Itens com mais de 30 fotos aparecem em mosaico menor: procure close-ups (o vistoriador fotografa de perto onde há defeito) e confirme no zoom.
 
-## Campos (preencha só os que o item tem em `campos`; Pintura nunca)
+## Campos (preencha os de `campos`; Pintura nunca)
+Todo item da tarefa precisa sair com pelo menos Material, Cor e Estado (se tiver foto). `"campos_novos": true` = o item veio do app sem
+campos: preencha Material, Cor, Estado (e Avarias, se houver) normalmente — o gravar.py cria os campos. Ter nota não dispensa os campos.
 - **Material**: plástico, madeira, MDF, MDF embutido sob medida, porcelanato, Revestimento de porcelanato, gesso, led, metal, metal cromado, inox,
   alvenaria, esquadria de alumínio e vidro, vidro, vidro liso, vidro e alumínio, louça, marmore, granito, quartzo, alumínio, vinílico, laminado,
   couro, courino, tecido, Tecido estofado, tecido com espuma, espuma tipo box, tela de lcd, metal com vidro.
@@ -33,6 +35,8 @@ Itens com mais de 30 fotos aparecem em mosaico menor: procure close-ups (o visto
 - Item sem foto própria: procure nos painéis do cômodo; se não achar, só a nota "Item sem fotos registradas." (campos vazios).
 - Item não avaliável: "Colchão embalado em plástico; não foi possível avaliar."
 - Reflexo, sombra e sujeira de foto não são avaria. Avaria duvidosa: não marque; escreva na nota "verificar no local".
+- Item que já tem nota (`notas` na tarefa): deixe "nota" vazia. Sem avaria e sem nada a acrescentar: "nota" vazia (não escreva "Sem avarias").
+- Nota do cômodo só para algo geral do cômodo (ex.: sinais de umidade no ambiente). Não liste utensílios, eletroportáteis ou pertences.
 
 ## Itens novos (só o agente de atenção)
 - Cômodo SEM itens (ex.: lavabo): crie os itens a partir das fotos do cômodo (porta, piso, parede, teto, luminária, interruptor, tomada,

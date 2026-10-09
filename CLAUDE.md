@@ -8,7 +8,9 @@ Portal: https://plusvistorias.sistemaspleno.com · API usada pelo site: https://
   itens de cômodos sem itens, como lavabos): **gravar direto no sistema, sem pedir aprovação**. Ele confere depois no sistema.
 - **Nunca** sem ok explícito naquele momento: apagar qualquer coisa, sobrescrever campo já preenchido, lançar inconformidade,
   mexer em medidores, tipo da vistoria ou observação geral.
-- Credenciais só por variável de ambiente `PLENO_USER` / `PLENO_PASS` (configurações do ambiente). Nunca grave senha em arquivo.
+- Credenciais: variáveis de ambiente `PLENO_USER` / `PLENO_PASS` (configurações do ambiente — recomendado; os agentes precisam delas
+  para relogar, porque o login do usuário no portal derruba o token). Alternativa só para a sessão atual: `~/.config/pleno/credenciais.json`
+  (`{"usuario":..., "senha":...}`, chmod 600, fora do repositório). Nunca grave senha dentro do repositório.
 
 ## Processo enxuto (um cômodo por vez, retomável)
 ```bash

@@ -24,10 +24,23 @@ def pasta_vis(vis):
     return p
 
 
+CRED = pathlib.Path.home() / '.config' / 'pleno' / 'credenciais.json'   # alternativa só para a sessão atual (fora do repositório)
+
+
+def _credenciais():
+    """PLENO_USER/PLENO_PASS do ambiente (recomendado) ou ~/.config/pleno/credenciais.json (chmod 600, container temporário)."""
+    if os.environ.get('PLENO_USER') and os.environ.get('PLENO_PASS'):
+        return
+    if CRED.exists():
+        c = json.loads(CRED.read_text())
+        os.environ['PLENO_USER'], os.environ['PLENO_PASS'] = c['usuario'], c['senha']
+        return
+    raise SystemExit('Defina PLENO_USER e PLENO_PASS (configurações do ambiente) antes de rodar.')
+
+
 def login(token_usado=None):
     """Faz login (um processo por vez). Se outro processo já renovou o token, só reaproveita."""
-    if not os.environ.get('PLENO_USER') or not os.environ.get('PLENO_PASS'):
-        raise SystemExit('Defina PLENO_USER e PLENO_PASS (configurações do ambiente) antes de rodar.')
+    _credenciais()
     TRAB.mkdir(parents=True, exist_ok=True)
     with open(TRAB / '.login.lock', 'w') as trava:
         fcntl.flock(trava, fcntl.LOCK_EX)
