@@ -4,7 +4,8 @@ Você preenche itens de UM cômodo de uma vistoria do sistema Pleno olhando as f
 O dono autorizou gravar o preenchimento sem aprovação prévia. Nunca apague nada, nunca lance inconformidade, não mexa em medidores.
 
 ## Economia (obrigatório — o custo vem do número de rodadas com imagens no contexto)
-- Rodada 1: leia o arquivo do cômodo. Rodada 2: leia TODOS os painéis que você vai usar de uma vez (várias chamadas Read na mesma resposta). Não releia imagens.
+- Rodada 1: leia estas regras, o arquivo do cômodo e TODOS os painéis indicados de uma vez (várias chamadas Read na mesma resposta). Não releia imagens.
+- No fim, salvar o JSON e rodar o gravar.py é UM comando Bash só (`cat > arquivo <<'EOF' ... EOF && python3 .../gravar.py ...`).
 - Zoom só onde houver suspeita de avaria, marca para ler ou dúvida de material: UMA chamada
   `python3 <ferramentas>/zoom.py <vis> <idx> n:k n:k a:k ...` (até 8 fotos; recorte: `n:k@x0,y0,x1,y1` em frações 0-1),
   e leia todas as grades impressas de uma vez. No máximo 2 rodadas de zoom.

@@ -28,24 +28,25 @@ const RESUMO = {
   required: ['itens_gravados', 'novos_itens', 'avarias', 'suspeitas', 'verificar_no_local', 'saida_gravar'],
 }
 
-const cab = c => `Leia primeiro ${REGRAS} (regras e formato). Tarefa do cômodo: ${TRAB}/comodo_${c.idx}.json (itens pendentes, campos de cada item e caminhos dos painéis).
-Vistoria ${VIS}, cômodo ${c.idx} (${c.ambiente}). Ferramentas: ${FERR}.`
+const cab = (c, paineis) => `Vistoria ${VIS}, cômodo ${c.idx} (${c.ambiente}). Ferramentas: ${FERR}.
+RODADA 1 — leia tudo de uma vez, na mesma resposta (chamadas Read em paralelo): ${REGRAS} (regras e formato), ${TRAB}/comodo_${c.idx}.json (itens pendentes e campos)${paineis.length ? ' e os painéis: ' + paineis.join(', ') : ''}.
+No fim, salve e grave num ÚNICO comando Bash: cat > <arquivo> <<'EOF' ...json... EOF && python3 ${FERR}/gravar.py ${VIS} <arquivo>`
 
-const leve = c => agent(`${cab(c)}
-Você é o agente LEVE. Trate SOMENTE os itens com "classe": "padrao". Use só os painéis em paineis.padrao (e paineis.ambiente se precisar achar item sem foto).
+const leve = c => agent(`${cab(c, (c.p_padrao || []).concat(c.n_sem_foto ? (c.p_ambiente || []) : []))}
+Você é o agente LEVE. Trate SOMENTE os itens com "classe": "padrao".
 Se um item padrão tiver possível avaria ou dúvida que exija zoom, NÃO o inclua no JSON: liste em "suspeitas" (o modelo forte cuida).
-Salve em ${TRAB}/res_${c.idx}_padrao.json e grave com gravar.py.`,
+Arquivo: ${TRAB}/res_${c.idx}_padrao.json.`,
   { label: `leve:${c.idx}-${c.ambiente}`, phase: 'Cômodos', schema: RESUMO, model: 'haiku', effort: 'low' })
 
-const forte = c => agent(`${cab(c)}
+const forte = c => agent(`${cab(c, (c.p_atencao || []).concat(c.p_ambiente || []))}
 Você é o agente de ATENÇÃO. Trate SOMENTE os itens com "classe": "atencao"${c.sem_itens ? ' — este cômodo NÃO tem itens: crie todos os itens a partir das fotos do cômodo (novos_itens) e uma nota do cômodo só se necessário' : ''}.
-Use paineis.atencao e paineis.ambiente. Paredes, tetos, pisos, móveis, eletros, bancadas e gabinetes: procure avaria de verdade e confirme no zoom antes de marcar.
-Salve em ${TRAB}/res_${c.idx}_atencao.json e grave com gravar.py. "suspeitas": [].`,
+Paredes, tetos, pisos, móveis, eletros, bancadas e gabinetes: procure avaria de verdade e confirme no zoom (uma chamada do zoom.py com todas as suspeitas) antes de marcar.
+Arquivo: ${TRAB}/res_${c.idx}_atencao.json. "suspeitas": [].`,
   { label: `forte:${c.idx}-${c.ambiente}`, phase: 'Cômodos', schema: RESUMO })
 
-const extra = (c, susp) => agent(`${cab(c)}
+const extra = (c, susp) => agent(`${cab(c, c.p_padrao || [])}
 Você é o agente de ATENÇÃO para itens padrão que o agente leve marcou como suspeitos: ${JSON.stringify(susp)}.
-Faça zoom só nessas fotos, decida e grave esses itens. Salve em ${TRAB}/res_${c.idx}_extra.json e grave com gravar.py. "suspeitas": [].`,
+Faça zoom só nessas fotos, decida e grave esses itens. Arquivo: ${TRAB}/res_${c.idx}_extra.json. "suspeitas": [].`,
   { label: `forte-extra:${c.idx}-${c.ambiente}`, phase: 'Cômodos', schema: RESUMO })
 
 phase('Cômodos')

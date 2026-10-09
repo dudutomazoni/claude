@@ -140,7 +140,9 @@ def main():
                        f"{t['idx']}. {t['_nome']} - {tipo} {p}", pa['lado'], pa['colunas'])
             t['paineis'][tipo] = [pa['arquivo'] for pa in t['paineis'][tipo]]
         info = {'idx': t['idx'], 'ambiente': t['_nome'], 'padrao': t['_pendentes']['padrao'], 'atencao': t['_pendentes']['atencao'],
-                'sem_itens': t['_sem_itens'], 'paineis': sum(len(v) for v in t['paineis'].values())}
+                'sem_itens': t['_sem_itens'], 'paineis': sum(len(v) for v in t['paineis'].values()),
+                'p_padrao': t['paineis']['padrao'], 'p_atencao': t['paineis']['atencao'], 'p_ambiente': t['paineis']['ambiente'],
+                'n_sem_foto': sum(1 for x in t['itens'] if x['classe'] == 'padrao' and not x['n_fotos'])}
         for k in ('_pendentes', '_sem_itens', '_nome'):
             t.pop(k)
         (pasta / f"comodo_{t['idx']}.json").write_text(json.dumps(t, ensure_ascii=False, indent=1))
