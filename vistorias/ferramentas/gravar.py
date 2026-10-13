@@ -19,6 +19,7 @@ Regras:
 - Campo que o item não tem (ex.: Tapete sem 'Estado') é criado com detalheDescricao/store.
 - Itens novos: ambienteItem/storeMultiple + detalheDescricao/storeMultiple (campos já com valores) + nota.
   Registro em trabalho/<vis>/novos_itens.json evita criar duas vezes se o script rodar de novo.
+  Se o sistema responder erro mas criar o item mesmo assim (acontece com tipos sem relação com o cômodo), o item é adotado.
 - No fim relê a vistoria e confere cada valor gravado. Log em trabalho/<vis>/gravacao.jsonl.
 """
 import html
@@ -155,11 +156,21 @@ def main():
             continue
         ok, r = op('POST', 'ambienteItem/storeMultiple', [{'amb_ite_quantidade': int(e.get('qtd') or 1), 'amb_codigo': amb['amb_codigo'],
                    'tip_ite_codigo': tipo[1], 'tip_est_codigo': None, 'tip_vis_codigo': d['tip_vis_codigo']}], f"novo item {tipo[0]}")
-        if not ok:
-            continue
         if simular:
             continue
-        novo = r[0]
+        if ok:
+            novo = r[0]
+        else:
+            # O servidor às vezes responde erro (tipo sem relação com o cômodo) mas cria o item mesmo assim:
+            # relê o cômodo e adota o item novo desse tipo, para não criar outro numa nova tentativa.
+            a2 = next(a for a in pleno.vistoria(vis)['ambientes'] if a['amb_codigo'] == amb['amb_codigo'])
+            ja = set(itens) | set(reg.values())
+            cand = [it for it in a2['ambientes_itens'] if it['tip_ite_codigo'] == tipo[1] and it['amb_ite_codigo'] not in ja]
+            if not cand:
+                continue
+            novo = {'amb_ite_codigo': max(it['amb_ite_codigo'] for it in cand)}
+            erros.pop()
+            feitos.append(('200', f"novo item {tipo[0]} (sistema respondeu erro, mas criou: {novo['amb_ite_codigo']})"))
         ite = novo['amb_ite_codigo']
         reg[chave] = ite
         reg_arq.write_text(json.dumps(reg, ensure_ascii=False, indent=1))
