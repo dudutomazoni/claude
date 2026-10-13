@@ -43,4 +43,4 @@ Códigos de campo: Material 1, Pintura 2, Cor 3, Funcionamento 4, Marca 5, Estad
   (só nota). Lições: (1) o Pleno recusa item novo de tipo não ligado ao tipo de cômodo, mas deixa um item vazio criado — o `gravar.py`
   agora confere `tipoAmbienteItem` antes; (2) "lavabo" (tip_amb 10) e "Área Técnica" (39) não têm nenhum tipo de item no Pleno: tudo
   vai na nota do cômodo; (3) Quarto não aceita Cabeceira nem Criado mudo; Sala não aceita banquetas; Área de serviço não aceita
-  Maquina Lava e Seca. Pendências com ok do Eduardo: 2 itens vazios na Sala, Janela duplicada na Área de serviço.
+  Maquina Lava e Seca. Itens vazios da Sala e Janela duplicada da Área de serviço: o Eduardo ajusta manualmente (não apagar).
