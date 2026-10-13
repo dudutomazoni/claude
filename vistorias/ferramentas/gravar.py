@@ -133,6 +133,11 @@ def main():
     # 3) itens novos
     reg_arq = pasta / 'novos_itens.json'
     reg = json.loads(reg_arq.read_text()) if reg_arq.exists() else {}
+    aceitos = None  # tipos de item que o sistema aceita neste tipo de cômodo (outro tipo gera erro e deixa item vazio)
+    if res.get('novos_itens'):
+        code, r = pleno.chamar('GET', f"tipoAmbienteItem?tip_amb_codigo={amb['tip_amb_codigo']}&tip_vis_codigo={d['tip_vis_codigo']}", None)
+        if code == '200' and isinstance(r, dict) and r.get('success'):
+            aceitos = {x['tip_amb_ite_codigo'] for x in r.get('data') or []}
     for k, e in enumerate(res.get('novos_itens', [])):
         chave = f"{amb['amb_codigo']}|{e['tipo']}|{(e.get('nota') or '')[:60]}|{k}"
         if chave in reg:
@@ -141,6 +146,9 @@ def main():
         tipo = cat_low.get(e['tipo'].strip().lower())
         if not tipo:
             rejeitados.append((f"novo item '{e['tipo']}'", 'tipo inexistente no catálogo (padrao/tipos_itens.json)'))
+            continue
+        if aceitos is not None and tipo[1] not in aceitos:
+            rejeitados.append((f"novo item '{e['tipo']}'", 'tipo não aceito neste cômodo pelo sistema: descreva na nota do item mais próximo ou do cômodo'))
             continue
         campos = {}
         for campo, td in TD.items():
