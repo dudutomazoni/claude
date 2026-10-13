@@ -39,3 +39,8 @@ Códigos de campo: Material 1, Pintura 2, Cor 3, Funcionamento 4, Marca 5, Estad
 - 189 (One Tower 3701, saída): comparativo entrada × saída com planilha; finalizada pela equipe.
 - 190 (Brava Garden 1303 A, saída): 132 itens preenchidos e conferidos (processo antigo, ~2,2 M tokens novos e ~209 M relidos em cache);
   usada como piloto do processo novo nos itens que vieram sem campos.
+- 192 (Alameda Jardins 2004): 12 cômodos pelo processo novo (Agent tool, leve + forte por cômodo); 175 itens preenchidos, 11 sem foto
+  (só nota). Lições: (1) o Pleno recusa item novo de tipo não ligado ao tipo de cômodo, mas deixa um item vazio criado — o `gravar.py`
+  agora confere `tipoAmbienteItem` antes; (2) "lavabo" (tip_amb 10) e "Área Técnica" (39) não têm nenhum tipo de item no Pleno: tudo
+  vai na nota do cômodo; (3) Quarto não aceita Cabeceira nem Criado mudo; Sala não aceita banquetas; Área de serviço não aceita
+  Maquina Lava e Seca. Pendências com ok do Eduardo: 2 itens vazios na Sala, Janela duplicada na Área de serviço.
