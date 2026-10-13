@@ -39,3 +39,6 @@ Códigos de campo: Material 1, Pintura 2, Cor 3, Funcionamento 4, Marca 5, Estad
 - 189 (One Tower 3701, saída): comparativo entrada × saída com planilha; finalizada pela equipe.
 - 190 (Brava Garden 1303 A, saída): 132 itens preenchidos e conferidos (processo antigo, ~2,2 M tokens novos e ~209 M relidos em cache);
   usada como piloto do processo novo nos itens que vieram sem campos.
+- 191 (Riviera Concept 1901, saída): processo novo com Agent tool (sem Workflow), 8 cômodos; 138 itens preenchidos, lavabo criado
+  do zero (14 itens), 3 itens sem foto ficaram só com nota. Achado: o sistema responde erro ao criar item de tipo sem relação com o
+  cômodo (ex.: Maquina Lava e Seca na área de serviço), mas cria o item; o `gravar.py` agora adota esse item em vez de criar outro.
