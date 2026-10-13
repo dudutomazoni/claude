@@ -138,8 +138,12 @@ def main():
         code, r = pleno.chamar('GET', f"tipoAmbienteItem?tip_amb_codigo={amb['tip_amb_codigo']}&tip_vis_codigo={d['tip_vis_codigo']}", None)
         if code == '200' and isinstance(r, dict) and r.get('success'):
             aceitos = {x['tip_amb_ite_codigo'] for x in r.get('data') or []}
-    for k, e in enumerate(res.get('novos_itens', [])):
-        chave = f"{amb['amb_codigo']}|{e['tipo']}|{(e.get('nota') or '')[:60]}|{k}"
+    vistos = {}
+    for e in res.get('novos_itens', []):
+        # chave não depende da posição na lista (o agente pode tirar um item recusado e rodar de novo)
+        base = f"{amb['amb_codigo']}|{e['tipo']}|{(e.get('nota') or '')[:60]}"
+        k = vistos[base] = vistos.get(base, -1) + 1
+        chave = f"{base}|{k}"
         if chave in reg:
             pulados.append(f"novo item {e['tipo']} (já criado: {reg[chave]})")
             continue
