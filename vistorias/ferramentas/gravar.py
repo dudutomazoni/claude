@@ -18,7 +18,8 @@ Regras:
   sozinha; termo inexistente é rejeitado e listado (saída com código 2) para correção.
 - Campo que o item não tem (ex.: Tapete sem 'Estado') é criado com detalheDescricao/store.
 - Itens novos: ambienteItem/storeMultiple + detalheDescricao/storeMultiple (campos já com valores) + nota.
-  Registro em trabalho/<vis>/novos_itens.json evita criar duas vezes se o script rodar de novo.
+  Registro em trabalho/<vis>/novos_itens.json evita criar duas vezes se o script rodar de novo; se o sistema
+  responder erro mas criar o item mesmo assim, o item criado é localizado e preenchido.
 - No fim relê a vistoria e confere cada valor gravado. Log em trabalho/<vis>/gravacao.jsonl.
 """
 import html
@@ -155,11 +156,22 @@ def main():
             continue
         ok, r = op('POST', 'ambienteItem/storeMultiple', [{'amb_ite_quantidade': int(e.get('qtd') or 1), 'amb_codigo': amb['amb_codigo'],
                    'tip_ite_codigo': tipo[1], 'tip_est_codigo': None, 'tip_vis_codigo': d['tip_vis_codigo']}], f"novo item {tipo[0]}")
-        if not ok:
-            continue
         if simular:
             continue
-        novo = r[0]
+        if not ok:
+            # Com alguns tipos (ex.: decoração) o sistema cria o item e depois responde erro: procura o item criado
+            # para não criar outro ao rodar de novo.
+            a_novo = next(a for a in pleno.vistoria(vis)['ambientes'] if a['amb_codigo'] == amb['amb_codigo'])
+            conhecidos = set(itens) | set(reg.values())
+            orfaos = [it for it in a_novo['ambientes_itens']
+                      if it['amb_ite_codigo'] not in conhecidos and it.get('tip_ite_codigo') == tipo[1]]
+            if not orfaos:
+                continue
+            erros.pop()
+            novo = max(orfaos, key=lambda it: it['amb_ite_codigo'])
+            feitos.append(('200', f"novo item {tipo[0]} (o sistema deu erro, mas criou o item {novo['amb_ite_codigo']})"))
+        else:
+            novo = r[0]
         ite = novo['amb_ite_codigo']
         reg[chave] = ite
         reg_arq.write_text(json.dumps(reg, ensure_ascii=False, indent=1))
