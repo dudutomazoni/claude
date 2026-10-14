@@ -133,6 +133,16 @@ def main():
     # 3) itens novos
     reg_arq = pasta / 'novos_itens.json'
     reg = json.loads(reg_arq.read_text()) if reg_arq.exists() else {}
+
+    def recuperar_criado(tip_ite):
+        """O sistema às vezes cria o item e mesmo assim responde com erro (ex.: "rel_tip_vis_codigo of non-object" em
+        cômodo sem relação de tipos, como a Área Técnica). Relê o cômodo e devolve o item novo desse tipo que não
+        existia no início nem está registrado; assim não se cria item repetido ao rodar de novo."""
+        a2 = next(a for a in pleno.vistoria(vis)['ambientes'] if a['amb_codigo'] == amb['amb_codigo'])
+        usados = set(itens) | set(reg.values())
+        cand = [it for it in a2['ambientes_itens'] if it['tip_ite_codigo'] == tip_ite and it['amb_ite_codigo'] not in usados]
+        return max(cand, key=lambda x: x['amb_ite_codigo']) if cand else None
+
     for k, e in enumerate(res.get('novos_itens', [])):
         chave = f"{amb['amb_codigo']}|{e['tipo']}|{(e.get('nota') or '')[:60]}|{k}"
         if chave in reg:
@@ -155,11 +165,18 @@ def main():
             continue
         ok, r = op('POST', 'ambienteItem/storeMultiple', [{'amb_ite_quantidade': int(e.get('qtd') or 1), 'amb_codigo': amb['amb_codigo'],
                    'tip_ite_codigo': tipo[1], 'tip_est_codigo': None, 'tip_vis_codigo': d['tip_vis_codigo']}], f"novo item {tipo[0]}")
-        if not ok:
-            continue
         if simular:
             continue
-        novo = r[0]
+        if ok:
+            novo = r[0]
+        else:
+            novo = recuperar_criado(tipo[1])
+            if not novo:
+                continue
+            erros.pop()  # criado apesar do erro na resposta
+            feitos.append(('200*', f"novo item {tipo[0]} (criado; resposta com erro, item achado relendo o cômodo)"))
+            log.write(json.dumps({'ok': True, 'desc': f"novo item {tipo[0]} recuperado", 'amb_ite_codigo': novo['amb_ite_codigo']},
+                                 ensure_ascii=False) + '\n')
         ite = novo['amb_ite_codigo']
         reg[chave] = ite
         reg_arq.write_text(json.dumps(reg, ensure_ascii=False, indent=1))
