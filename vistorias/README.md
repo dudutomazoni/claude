@@ -39,3 +39,7 @@ Códigos de campo: Material 1, Pintura 2, Cor 3, Funcionamento 4, Marca 5, Estad
 - 189 (One Tower 3701, saída): comparativo entrada × saída com planilha; finalizada pela equipe.
 - 190 (Brava Garden 1303 A, saída): 132 itens preenchidos e conferidos (processo antigo, ~2,2 M tokens novos e ~209 M relidos em cache);
   usada como piloto do processo novo nos itens que vieram sem campos.
+- 194 (Marinas Residence 3301, entrada): 15 cômodos, 267 itens preenchidos (37 itens novos, inclusive Área Técnica e lavabo sem itens);
+  7 itens sem foto ficaram só com a nota. Processo novo com o Agent tool (sem Workflow), um cômodo por vez.
+  Achados: na Área Técnica o `storeMultiple` cria o item mas responde erro (`rel_tip_vis_codigo`) — o `gravar.py` agora recupera;
+  em cômodos integrados (sala/cozinha/sacada) o agente tende a criar de novo objetos do cômodo vizinho (ex.: cortina).

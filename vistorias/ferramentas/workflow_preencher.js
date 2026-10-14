@@ -35,12 +35,15 @@ No fim, salve e grave num ÚNICO comando Bash: cat > <arquivo> <<'EOF' ...json..
 const leve = c => agent(`${cab(c, (c.p_padrao || []).concat(c.n_sem_foto ? (c.p_ambiente || []) : []))}
 Você é o agente LEVE. Trate SOMENTE os itens com "classe": "padrao".
 Se um item padrão tiver possível avaria ou dúvida que exija zoom, NÃO o inclua no JSON: liste em "suspeitas" (o modelo forte cuida).
+Não crie itens novos ("novos_itens": []) — isso é só do agente de atenção.
 Arquivo: ${TRAB}/res_${c.idx}_padrao.json.`,
   { label: `leve:${c.idx}-${c.ambiente}`, phase: 'Cômodos', schema: RESUMO, model: 'haiku', effort: 'low' })
 
 const forte = c => agent(`${cab(c, (c.p_atencao || []).concat(c.p_ambiente || []))}
 Você é o agente de ATENÇÃO. Trate SOMENTE os itens com "classe": "atencao"${c.sem_itens ? ' — este cômodo NÃO tem itens: crie todos os itens a partir das fotos do cômodo (novos_itens) e uma nota do cômodo só se necessário' : ''}.
 Paredes, tetos, pisos, móveis, eletros, bancadas e gabinetes: procure avaria de verdade e confirme no zoom (uma chamada do zoom.py com todas as suspeitas) antes de marcar.
+Item novo só se o objeto está claramente NESTE cômodo e não é cadastrado: cômodos vizinhos aparecem ao fundo das fotos (cortinas, portas, móveis de outro cômodo) — na dúvida, não crie e cite em verificar_no_local.${c.n_sem_foto ? `
+Itens com "classe": "padrao" e "n_fotos": 0 (sem foto própria): o agente leve só põe a nota "Item sem fotos registradas.". Se algum deles aparecer nos seus painéis, inclua-o no SEU JSON com os campos e "nota" vazia.` : ''}
 Arquivo: ${TRAB}/res_${c.idx}_atencao.json. "suspeitas": [].`,
   { label: `forte:${c.idx}-${c.ambiente}`, phase: 'Cômodos', schema: RESUMO })
 
