@@ -39,3 +39,5 @@ Códigos de campo: Material 1, Pintura 2, Cor 3, Funcionamento 4, Marca 5, Estad
 - 189 (One Tower 3701, saída): comparativo entrada × saída com planilha; finalizada pela equipe.
 - 190 (Brava Garden 1303 A, saída): 132 itens preenchidos e conferidos (processo antigo, ~2,2 M tokens novos e ~209 M relidos em cache);
   usada como piloto do processo novo nos itens que vieram sem campos.
+- 193 (Brava Breeze 702, entrada): 153 itens preenchidos pelo processo novo (Agent tool, um cômodo por vez). Achado: com o tipo
+  "decoração" o sistema cria o item e responde erro; o gravar.py agora localiza o item criado em vez de criar outro.
