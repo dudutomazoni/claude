@@ -33,7 +33,13 @@ def main():
             continue
         orig = full / f'{idx}_{n}_{k}.jpg'
         if not orig.exists() or orig.stat().st_size < 1000:
-            subprocess.run(['curl', '-sS', '--max-time', '90', '-o', str(orig), url], check=True)
+            # -f: erro do servidor (ex.: ServiceUnavailable em XML) não vira "foto"; --retry cobre falhas passageiras
+            r = subprocess.run(['curl', '-sSf', '--retry', '4', '--retry-all-errors', '--retry-delay', '3',
+                                '--max-time', '90', '-o', str(orig), url])
+            if r.returncode or orig.read_bytes()[:2] != b'\xff\xd8':
+                orig.unlink(missing_ok=True)
+                print('foto não baixou (tente de novo):', ref)
+                continue
         out = zdir / f"{idx}_{n}_{k}{'_r' + rec.replace(',', '-') if rec else ''}.jpg"
         cmd = ['convert', str(orig), '-auto-orient']
         if rec:
