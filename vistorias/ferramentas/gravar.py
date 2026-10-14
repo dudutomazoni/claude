@@ -155,6 +155,17 @@ def main():
             continue
         ok, r = op('POST', 'ambienteItem/storeMultiple', [{'amb_ite_quantidade': int(e.get('qtd') or 1), 'amb_codigo': amb['amb_codigo'],
                    'tip_ite_codigo': tipo[1], 'tip_est_codigo': None, 'tip_vis_codigo': d['tip_vis_codigo']}], f"novo item {tipo[0]}")
+        recuperado = False
+        if not ok and not simular:
+            # Tipo sem ligação com este tipo de cômodo (ex.: Rodapés em Área externa): o servidor cria o item e mesmo assim
+            # responde erro. Procura o item criado para preencher e registrar, senão a próxima rodada cria outro igual.
+            a_atual = next(a for a in pleno.vistoria(vis)['ambientes'] if a['amb_codigo'] == amb['amb_codigo'])
+            criados = [it for it in a_atual['ambientes_itens'] if it['tip_ite_codigo'] == tipo[1]
+                       and it['amb_ite_codigo'] not in itens and it['amb_ite_codigo'] not in reg.values()]
+            if criados:
+                erros.pop()
+                feitos.append(('recuperado', f"novo item {tipo[0]} (criado apesar do erro do servidor)"))
+                ok, r, recuperado = True, [criados[-1]], True
         if not ok:
             continue
         if simular:
@@ -174,7 +185,12 @@ def main():
                            'tip_det_des_codigo_array': campos.get(td, ([], [], ''))[0], 'uniqId': f'n{ite}_{td}'})
             if td in campos:
                 esperado[(ite, td)] = campos[td][1]
-        op('POST', 'detalheDescricao/storeMultiple', linhas, f'novo item {tipo[0]} / detalhes')
+        if recuperado:  # campo a campo, a mesma rota dos itens existentes (testada nesses itens)
+            for ln in linhas:
+                ln.pop('uniqId')
+                op('POST', 'detalheDescricao/store', ln, f"novo item {tipo[0]} / {ln['tipo_detalhe']}")
+        else:
+            op('POST', 'detalheDescricao/storeMultiple', linhas, f'novo item {tipo[0]} / detalhes')
         if (e.get('nota') or '').strip():
             op('POST', 'nota/store', {'amb_ite_codigo': ite, 'not_descricao': html_nota(e['nota']), 'not_ordem': 1}, f'novo item {tipo[0]} / nota')
     # 4) conferência

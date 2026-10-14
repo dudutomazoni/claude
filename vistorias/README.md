@@ -39,3 +39,7 @@ Códigos de campo: Material 1, Pintura 2, Cor 3, Funcionamento 4, Marca 5, Estad
 - 189 (One Tower 3701, saída): comparativo entrada × saída com planilha; finalizada pela equipe.
 - 190 (Brava Garden 1303 A, saída): 132 itens preenchidos e conferidos (processo antigo, ~2,2 M tokens novos e ~209 M relidos em cache);
   usada como piloto do processo novo nos itens que vieram sem campos.
+- 195 (Porto Primavera 101, saída, 14/10/2026): 12 cômodos pelo processo novo (Agent tool, sem Workflow), 182 itens.
+  Área externa veio sem itens; Rodapés, Guarda corpo e Chuveiro não têm ligação com esse tipo de cômodo: o `ambienteItem/storeMultiple`
+  responde erro (`carregarDetalhes()`), mas cria o item. O agente rodou de novo e ficaram 3 itens vazios repetidos (41918, 41919, 41920)
+  e uma nota do cômodo (1432) dizendo que não foi possível cadastrar: apagar só com ok. O `gravar.py` agora acha o item criado e preenche.

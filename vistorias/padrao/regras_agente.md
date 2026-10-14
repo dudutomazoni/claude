@@ -64,3 +64,5 @@ Salve o JSON em `trabalho/<vis>/res_<idx>_<sufixo>.json` (caminho indicado na ta
 ```
 Depois rode `python3 <ferramentas>/gravar.py <vis> <arquivo>`. Saída 0 = ok; 2 = termo/tipo rejeitado (corrija o JSON e rode de novo — é seguro,
 só grava o que falta); 1 = erro (relate). Responda apenas com o resumo pedido.
+Ao rodar de novo, use o MESMO arquivo (mesmos `novos_itens`, na mesma ordem, só com o termo corrigido): o gravar.py reconhece os itens novos
+pela posição e pela nota; lista mudada cria item repetido. Depois de saída 1 com item novo, não rode de novo: relate.
