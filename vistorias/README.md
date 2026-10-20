@@ -39,3 +39,5 @@ Códigos de campo: Material 1, Pintura 2, Cor 3, Funcionamento 4, Marca 5, Estad
 - 189 (One Tower 3701, saída): comparativo entrada × saída com planilha; finalizada pela equipe.
 - 190 (Brava Garden 1303 A, saída): 132 itens preenchidos e conferidos (processo antigo, ~2,2 M tokens novos e ~209 M relidos em cache);
   usada como piloto do processo novo nos itens que vieram sem campos.
+- 205 (Ed Roma 803, entrada): 138 itens preenchidos e 5 itens novos pelo processo novo (Agent tool, sem Workflow, um cômodo por vez).
+  Ficaram sem campos, só com nota: tomada e porta papel do banheiro 6 (sem fotos) e colchão do quarto 8 (coberto pela colcha).
