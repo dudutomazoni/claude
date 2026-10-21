@@ -73,7 +73,8 @@ def main():
             if pleno.item_preenchido(it) and not todos:
                 continue
             nome_it = it['tipo_ambiente_item']['tip_amb_ite_descricao']
-            classe = 'padrao' if nome_it.lower() in classes else 'atencao'
+            # sem foto própria nem do cômodo: só o forte vê as fotos dos outros itens, onde o objeto costuma aparecer
+            classe = 'padrao' if nome_it.lower() in classes and (fotos or fotos_amb) else 'atencao'
             campos = [CAMPOS.get(dd['tip_det_codigo'], dd['tipo_detalhe']['tip_det_nome'])
                       for dd in sorted(it.get('detalhe_descricao') or [], key=lambda x: x['det_des_ordem'])]
             campos = [c for c in campos if c != 'Pintura']
