@@ -13,7 +13,9 @@ Formato do resultado (um cômodo):
 }
 Regras:
 - Nunca sobrescreve: campo que já tem valor é pulado (a nota só entra se o item não tiver nota);
-  --sobrescrever permite substituir. Rodar de novo é seguro: só grava o que ainda está vazio.
+  --sobrescrever permite acrescentar termos a um campo já preenchido. Rodar de novo é seguro: só grava o que ainda está vazio.
+- Nunca apaga opções (pedido do Eduardo em 21/10/2026): ao gravar um campo, os termos que ele já tem são mantidos e os
+  novos são somados a eles. Vários termos no mesmo campo são aceitos (ex.: vaso "louça, descarga caixa acoplada").
 - Termos: precisam existir na lista do sistema (tipoDetalheDescricao). Diferença só de maiúsculas é corrigida
   sozinha; termo inexistente é rejeitado e listado (saída com código 2) para correção.
 - Campo que o item não tem (ex.: Tapete sem 'Estado') é criado com detalheDescricao/store.
@@ -106,9 +108,14 @@ def main():
             cods, nomes = codigos(val, f'{nome_it} / {campo}')
             if cods is None:
                 continue
-            esperado[(it['amb_ite_codigo'], td)] = nomes
             if td in dets:
                 dd = dets[td]
+                # mantém o que o campo já tem e só acrescenta
+                ja = [r['tip_det_des_codigo'] for r in dd.get('relacoes_detalhes_descricoes_tipos') or []]
+                cods = ja + [c for c in cods if c not in ja]
+                nomes = list(dict.fromkeys([r['tip_det_descricao'] for r in dd.get('relacoes_detalhes_descricoes_tipos') or []] + nomes))
+            esperado[(it['amb_ite_codigo'], td)] = nomes
+            if td in dets:
                 corpo = {'det_des_codigo': dd['det_des_codigo'], 'amb_ite_codigo': it['amb_ite_codigo'], 'cha_codigo': None,
                          'med_codigo': None, 'det_des_ordem': dd['det_des_ordem'], 'tip_det_codigo': td,
                          'tipo_detalhe': campo, 'tip_det_des_codigo_array': cods}
@@ -187,7 +194,7 @@ def main():
             for dd in it.get('detalhe_descricao') or []:
                 atual[(it['amb_ite_codigo'], dd['tip_det_codigo'])] = sorted(pleno.valores(dd))
         for chave, nomes in esperado.items():
-            if atual.get(chave) != sorted(nomes):
+            if not set(nomes) <= set(atual.get(chave) or []):
                 divergencias.append((chave, nomes, atual.get(chave)))
     print(f"Cômodo {amb['tipo_ambiente']['tip_amb_descricao']} (amb {amb['amb_codigo']}): gravações ok {len(feitos)} | erros {len(erros)} | "
           f"pulados {len(pulados)} | termos rejeitados {len(rejeitados)} | divergências na conferência {len(divergencias)}"

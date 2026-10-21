@@ -33,7 +33,11 @@ python3 vistorias/ferramentas/status.py <vis> [--detalhe] # confere direto no si
 - Não monte planilha para o preenchimento; o resumo final vem do `status.py`.
 
 ## Padrão de preenchimento (resumo)
-Termos exatos da lista do sistema (o `gravar.py` valida). Pintura sempre vazia. Funcionamento "funcionando" (testes do vistoriador).
+Termos exatos da lista do sistema (o `gravar.py` valida). Pintura sempre vazia.
+**Nunca apague as outras opções de um campo** (pedido do Eduardo em 21/10/2026, vale para todos os campos e todos os cômodos):
+ao marcar uma opção (ex.: cor Branca), as opções que o campo já tem ficam; o `gravar.py` só acrescenta, nunca remove.
+Um campo pode ter mais de uma opção marcada quando fizer sentido — ex.: **vaso sanitário**, Material "louça, descarga caixa acoplada".
+Funcionamento "funcionando" (testes do vistoriador).
 Estado "Em bom estado" / "Em estado regular". Notas curtas com inicial maiúscula e ponto final, dizendo onde está a avaria.
 Observação geral padrão (só com ok): "Testes elétricos realizados. Testes hidráulicos realizados."
 Comparativo entrada × saída: processo separado, usado raramente (ver histórico da vistoria 189 no README).

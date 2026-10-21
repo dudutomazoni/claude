@@ -28,6 +28,8 @@ campos: preencha Material, Cor, Estado (e Avarias, se houver) normalmente — o 
 - **Estado**: "Em bom estado" ou "Em estado regular" (regular = avarias relevantes ou espalhadas).
 - **Avarias**: manchas, riscos, lascados, rachaduras, fissuras, furos, sinais de umidade, amassados, oxidação, sujeira, trincado, descascando,
   marcas, puxador solto, parte solta, bamba, gordura acumulada. Sem avaria: "".
+- Nunca apague opções que o campo já tem: o gravar.py só acrescenta (pedido do dono). Pode marcar mais de uma opção no mesmo campo.
+- **Vaso sanitário** com caixa acoplada: Material "louça, descarga caixa acoplada" (as duas).
 - Vários valores separados por vírgula ("MDF, marmore"). O gravar.py recusa termo inexistente no sistema: troque por um da lista e rode de novo.
 
 ## Notas (frase curta, inicial maiúscula, ponto final)
@@ -59,8 +61,8 @@ Salve o JSON em `trabalho/<vis>/res_<idx>_<sufixo>.json` (caminho indicado na ta
  "itens": [{"amb_ite_codigo": 40339, "Material": "madeira", "Cor": "Branca", "Funcionamento": "funcionando", "Marca": "",
             "Estado": "Em bom estado", "Avarias": "", "nota": ""}],
  "nota_ambiente": "",
- "novos_itens": [{"tipo": "Vaso sanitário", "qtd": 1, "Material": "louça", "Cor": "Branca", "Funcionamento": "funcionando",
-                  "Estado": "Em bom estado", "Avarias": "", "nota": "Vaso com caixa acoplada."}]}
+ "novos_itens": [{"tipo": "Vaso sanitário", "qtd": 1, "Material": "louça, descarga caixa acoplada", "Cor": "Branca", "Funcionamento": "funcionando",
+                  "Estado": "Em bom estado", "Avarias": "", "nota": ""}]}
 ```
 Depois rode `python3 <ferramentas>/gravar.py <vis> <arquivo>`. Saída 0 = ok; 2 = termo/tipo rejeitado (corrija o JSON e rode de novo — é seguro,
 só grava o que falta); 1 = erro (relate). Responda apenas com o resumo pedido.
