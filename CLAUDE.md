@@ -18,6 +18,8 @@ python3 vistorias/ferramentas/preparar.py <vis>          # lê em texto, pula o 
 # Workflow: scriptPath vistorias/ferramentas/workflow_preencher.js, args = JSON do ARGS_WORKFLOW
 python3 vistorias/ferramentas/status.py <vis> [--detalhe] # confere direto no sistema
 ```
+- **Vídeos são analisados** (pedido do Eduardo em 21/10/2026): o `preparar.py` baixa os vídeos dos itens e dos cômodos e põe de 3 a 8
+  quadros de cada um nos painéis (rótulo `vjqk`); os agentes usam os quadros para funcionamento e avarias.
 - O sistema é a fonte da verdade: se a sessão cair, rode `preparar.py` de novo — ele só lista o que ainda falta.
 - Por cômodo: modelo **leve** (haiku) nos itens padrão (tomada, interruptor, luminária, ralo...; lista em `vistorias/padrao/classes_itens.json`);
   modelo **forte** em paredes, tetos, pisos, portas, móveis, eletros, bancadas, gabinetes, box e louças, com zoom só onde há suspeita.

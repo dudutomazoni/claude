@@ -9,7 +9,9 @@ Uso: python3 preparar.py <vis_codigo> [--todos] [--comodos 1,2,5]
    - padrao:  até 3 fotos espalhadas por item, 30 por painel;
    - atencao: todas as fotos do item (até 30 por painel); itens com mais de 30 fotos viram
               mosaico de 48 miniaturas menores por painel (cobre tudo; o zoom vem depois);
-   - ambiente: fotos do próprio cômodo (essenciais em cômodo sem itens, como lavabos).
+   - ambiente: fotos do próprio cômodo (essenciais em cômodo sem itens, como lavabos);
+   - vídeos (do item ou do cômodo): baixa e tira de 3 a 8 quadros espalhados de cada um, que entram no painel
+     junto com as fotos (rótulo "vjqk" = quadro k do vídeo j; o zoom usa o quadro em tamanho cheio).
 4. Grava trabalho/<vis>/comodo_<idx>.json (tarefa compacta de cada cômodo) e fotos.json (URLs para o zoom)
    e imprime o resumo usado como `args` do workflow.
 """
@@ -31,6 +33,33 @@ def espalhadas(n, k):
     return sorted({round(i * (n - 1) / (k - 1)) for i in range(k)})
 
 
+def quadros_video(url, full, thumbs, prefixo):
+    """Baixa o vídeo (com cache) e extrai quadros espalhados. Retorna [(codigo_tile, caminho_quadro)]."""
+    vids = full.parent / 'videos'
+    vids.mkdir(exist_ok=True)
+    mp4 = vids / f'{prefixo}.mp4'
+    if not mp4.exists() or mp4.stat().st_size < 1000:
+        subprocess.run(['curl', '-sS', '--max-time', '180', '-o', str(mp4), url.split('?')[0]])
+    try:
+        dur = float(subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', str(mp4)],
+                                   capture_output=True, text=True).stdout.strip())
+    except ValueError:
+        return []
+    n = max(3, min(8, round(dur / 1.5)))
+    saida = []
+    for k in range(1, n + 1):
+        cod = f'{prefixo}q{k}'
+        q = full / f'{cod}.jpg'
+        if not q.exists() or q.stat().st_size < 1000:
+            t = dur * (k - 0.5) / n
+            subprocess.run(['ffmpeg', '-v', 'error', '-y', '-ss', f'{t:.2f}', '-i', str(mp4), '-frames:v', '1',
+                            '-vf', 'scale=1280:1280:force_original_aspect_ratio=decrease', str(q)])
+        if q.exists() and q.stat().st_size >= 1000:
+            subprocess.run(['convert', str(q), '-resize', '400x400', str(thumbs / f'{cod}.jpg')])
+            saida.append((cod, str(q)))
+    return saida
+
+
 def montar(arquivos, rotulos, saida, titulo, lado, colunas):
     args = ['montage']
     for f, r in zip(arquivos, rotulos):
@@ -48,10 +77,31 @@ def main():
     classes = {x.lower() for x in json.load(open(pleno.BASE / 'padrao' / 'classes_itens.json'))['padrao']}
     pasta = pleno.pasta_vis(vis)
     thumbs, paineis = pasta / 'thumbs', pasta / 'paineis'
-    thumbs.mkdir(exist_ok=True)
-    paineis.mkdir(exist_ok=True)
+    full = pasta / 'full'
+    for x in (thumbs, paineis, full):
+        x.mkdir(exist_ok=True)
     d = pleno.vistoria(vis)
     fotos_url, baixar, resumo = {}, [], []
+    # vídeos: quadros extraídos antes de montar os painéis (fotos_url aponta para o arquivo local)
+    jobs = []
+    for idx, a in enumerate(pleno.ambientes_ordenados(d), 1):
+        if so and idx not in so:
+            continue
+        for j, v in enumerate(a.get('videos') or [], 1):
+            jobs.append((idx, 'a', j, v['path']))
+        for n, it in enumerate(pleno.itens_ordenados(a), 1):
+            if pleno.item_preenchido(it) and not todos:
+                continue
+            for j, v in enumerate(it.get('videos') or [], 1):
+                jobs.append((idx, n, j, v['path']))
+    with ThreadPoolExecutor(6) as ex:
+        res_v = list(ex.map(lambda jb: quadros_video(jb[3], full, thumbs, f'{jb[0]}_{jb[1]}_v{jb[2]}'), jobs))
+    quadros = {}  # (idx, n|'a') -> [(rotulo 'vjqk', codigo_tile, caminho)]
+    for (idx, n, j, _), qs in zip(jobs, res_v):
+        for cod, cam in qs:
+            r = cod.rsplit('_', 1)[1]
+            quadros.setdefault((idx, n), []).append((r, cod, cam))
+            fotos_url[f'{idx}:{n}:{r}'] = 'file://' + cam
 
     for idx, a in enumerate(pleno.ambientes_ordenados(d), 1):
         if so and idx not in so:
@@ -61,10 +111,11 @@ def main():
         fotos_amb = [f['path'] for f in a.get('fotos') or []]
         for k, u in enumerate(fotos_amb, 1):
             fotos_url[f'{idx}:a:{k}'] = u
+        quadros_amb = quadros.get((idx, 'a'), [])
         tarefa = {'vis': int(vis), 'idx': idx, 'amb_codigo': a['amb_codigo'], 'ambiente': nome,
                   'tip_amb_codigo': a.get('tip_amb_codigo'), 'tip_vis_codigo': d['tip_vis_codigo'],
                   'notas_ambiente': [n['not_descricao'] for n in a.get('notas') or []],
-                  'n_fotos_ambiente': len(fotos_amb), 'itens': [], 'paineis': {'padrao': [], 'atencao': [], 'ambiente': []}}
+                  'n_fotos_ambiente': len(fotos_amb), 'n_videos_ambiente': len(a.get('videos') or []), 'itens': [], 'paineis': {'padrao': [], 'atencao': [], 'ambiente': []}}
         pend = {'padrao': [], 'atencao': []}
         for n, it in enumerate(itens_todos, 1):
             fotos = [f['path'] for f in it.get('fotos') or []]
@@ -82,20 +133,23 @@ def main():
                 campos = ['Material', 'Cor', 'Estado', 'Avarias']
             tarefa['itens'].append({'n': n, 'amb_ite_codigo': it['amb_ite_codigo'], 'item': nome_it, 'qtd': it['amb_ite_quantidade'],
                                     'classe': classe, 'campos': campos, 'campos_novos': sem_campos, 'n_fotos': len(fotos),
+                                    'n_videos': len(it.get('videos') or []),
                                     'notas': [n2['not_descricao'] for n2 in it.get('notas') or []]})
-            pend[classe].append((n, nome_it, fotos))
+            pend[classe].append((n, nome_it, fotos, quadros.get((idx, n), [])))
         sem_itens = not itens_todos
         # painel padrão: até 3 fotos espalhadas de cada item
         tiles = []
-        for n, nome_it, fotos in pend['padrao']:
+        for n, nome_it, fotos, qv in pend['padrao']:
             for k in espalhadas(len(fotos), 3):
                 tiles.append((f'{idx}_{n}_{k + 1}', fotos[k], f'{n}.{nome_it[:16]} f{k + 1}'))
+            tiles += [(cod, None, f'{n}.{nome_it[:16]} {r}') for r, cod, _ in qv]
         for p in range(0, len(tiles), 30):
             tarefa['paineis']['padrao'].append(('padrao', tiles[p:p + 30], 220, 6))
         # painéis de atenção: todas as fotos; itens grandes em mosaico menor
         grupo = []
-        for n, nome_it, fotos in pend['atencao']:
+        for n, nome_it, fotos, qv in pend['atencao']:
             t = [(f'{idx}_{n}_{k}', u, f'{n}.{nome_it[:14]} f{k}') for k, u in enumerate(fotos, 1)]
+            t += [(cod, None, f'{n}.{nome_it[:14]} {r}') for r, cod, _ in qv]
             if len(t) > 30:
                 for p in range(0, len(t), 48):
                     tarefa['paineis']['atencao'].append(('atencao', t[p:p + 48], 150, 8))
@@ -107,10 +161,11 @@ def main():
         if grupo:
             tarefa['paineis']['atencao'].append(('atencao', grupo, 220, 6))
         # fotos do ambiente: obrigatórias em cômodo sem itens; contexto (até 30) nos demais
-        if fotos_amb and (sem_itens or tarefa['itens']):
+        if (fotos_amb or quadros_amb) and (sem_itens or tarefa['itens']):
             t = [(f'{idx}_a_{k}', u, f'amb f{k}') for k, u in enumerate(fotos_amb, 1)]
             if not sem_itens:
                 t = [t[i] for i in espalhadas(len(t), 30)]
+            t += [(cod, None, f'amb {r}') for r, cod, _ in quadros_amb]
             for p in range(0, len(t), 30):
                 tarefa['paineis']['ambiente'].append(('ambiente', t[p:p + 30], 220, 6))
         # numera e registra downloads
@@ -119,7 +174,7 @@ def main():
             for p, (_, t, lado, cols) in enumerate(tarefa['paineis'][tipo], 1):
                 arq = str(paineis / f'{idx:02d}_{tipo}_{p}.jpg')
                 lista.append({'arquivo': arq, 'tiles': t, 'lado': lado, 'colunas': cols})
-                baixar += [(str(thumbs / f'{c}.jpg'), u.split('?')[0].replace('/fotos/', '/fotos/thumbs/')) for c, u, _ in t]
+                baixar += [(str(thumbs / f'{c}.jpg'), u.split('?')[0].replace('/fotos/', '/fotos/thumbs/')) for c, u, _ in t if u]
             tarefa['paineis'][tipo] = lista
         tarefa['_pendentes'] = {k: len(v) for k, v in pend.items()}
         tarefa['_sem_itens'] = sem_itens
@@ -142,7 +197,8 @@ def main():
         info = {'idx': t['idx'], 'ambiente': t['_nome'], 'padrao': t['_pendentes']['padrao'], 'atencao': t['_pendentes']['atencao'],
                 'sem_itens': t['_sem_itens'], 'paineis': sum(len(v) for v in t['paineis'].values()),
                 'p_padrao': t['paineis']['padrao'], 'p_atencao': t['paineis']['atencao'], 'p_ambiente': t['paineis']['ambiente'],
-                'n_sem_foto': sum(1 for x in t['itens'] if x['classe'] == 'padrao' and not x['n_fotos'])}
+                'n_sem_foto': sum(1 for x in t['itens'] if x['classe'] == 'padrao' and not x['n_fotos'] and not x['n_videos']),
+                'videos': sum(x['n_videos'] for x in t['itens']) + t['n_videos_ambiente']}
         for k in ('_pendentes', '_sem_itens', '_nome'):
             t.pop(k)
         (pasta / f"comodo_{t['idx']}.json").write_text(json.dumps(t, ensure_ascii=False, indent=1))
@@ -151,7 +207,8 @@ def main():
     (pasta / 'fotos.json').write_text(json.dumps(fotos_url, ensure_ascii=False))
     print(f"Vistoria {vis}: {d.get('vis_identificacao')} | tipo {d['tip_vis_codigo']}")
     for i in saida:
-        print(f"  {i['idx']:>2}. {i['ambiente']:<18} padrão {i['padrao']:>2} | atenção {i['atencao']:>2} | sem itens {'sim' if i['sem_itens'] else 'não'} | painéis {i['paineis']}")
+        print(f"  {i['idx']:>2}. {i['ambiente']:<18} padrão {i['padrao']:>2} | atenção {i['atencao']:>2} | sem itens {'sim' if i['sem_itens'] else 'não'} | painéis {i['paineis']}"
+              + (f" | vídeos {i['videos']}" if i['videos'] else ''))
     if not saida:
         print('  Nada pendente: todos os itens já têm preenchimento.')
     print('ARGS_WORKFLOW=' + json.dumps({'vis': int(vis), 'base': str(pleno.BASE), 'comodos': saida}, ensure_ascii=False))

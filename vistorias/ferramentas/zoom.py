@@ -3,6 +3,7 @@
 Uso: python3 zoom.py <vis> <idx_comodo> <ref> [<ref> ...]
   ref = n:k     -> foto k do item n do cômodo (como no rótulo do painel: "n.Item fk")
         a:k     -> foto k do próprio cômodo ("amb fk")
+        n:vjqk  -> quadro k do vídeo j do item n ("n.Item vjqk"); a:vjqk para vídeo do cômodo
         n:k@x0,y0,x1,y1 -> recorte (frações 0-1 da foto), ex.: 4:23@0.5,0.5,1,1 = quarto inferior direito
 Baixa a foto original (com cache), monta grades 2x2 de ~750 px por foto e imprime os arquivos gerados.
 Leia todos os arquivos impressos de uma vez (uma rodada).
@@ -31,8 +32,10 @@ def main():
         if not url:
             print('referência inexistente:', ref)
             continue
-        orig = full / f'{idx}_{n}_{k}.jpg'
-        if not orig.exists() or orig.stat().st_size < 1000:
+        orig = full / f'{idx}_{n}_{k}.jpg'  # quadros de vídeo (k = vjqk) já estão aqui, extraídos pelo preparar.py
+        if url.startswith('file://'):
+            pass
+        elif not orig.exists() or orig.stat().st_size < 1000:
             subprocess.run(['curl', '-sS', '--max-time', '90', '-o', str(orig), url], check=True)
         out = zdir / f"{idx}_{n}_{k}{'_r' + rec.replace(',', '-') if rec else ''}.jpg"
         cmd = ['convert', str(orig), '-auto-orient']

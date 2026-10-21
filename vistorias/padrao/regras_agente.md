@@ -14,6 +14,10 @@ O dono autorizou gravar o preenchimento sem aprovação prévia. Nunca apague na
 
 ## Painéis
 Rótulo de cada miniatura: `n.Item fk` = foto k do item n (use `n:k` no zoom); `amb fk` = foto k do cômodo (use `a:k`).
+**Vídeos**: `n.Item vjqk` = quadro k do vídeo j do item n (zoom `n:vjqk`; do cômodo: `amb vjqk`, zoom `a:vjqk`). Os quadros seguem a
+ordem do vídeo: analise-os sempre, como fotos. Servem para ver funcionamento (persiana subindo/descendo, luz acendendo, água saindo,
+porta abrindo) e avarias. Movimento visto nos quadros confirma "funcionando"; defeito visível = "não funcionando"/"funcionando parcialmente".
+O som não chega (campainha etc.): mantenha "funcionando". Item só com vídeo conta como item com foto.
 Itens com mais de 30 fotos aparecem em mosaico menor: procure close-ups (o vistoriador fotografa de perto onde há defeito) e confirme no zoom.
 
 ## Campos (preencha os de `campos`; Pintura nunca)

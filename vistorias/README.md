@@ -4,8 +4,8 @@
 |---|---|
 | `ferramentas/login.js` | Login no portal (Playwright/Chromium) e captura do token da API. Chamado sozinho pelo `pleno.py` em 401. |
 | `ferramentas/pleno.py` | Cliente da API: token, relogin automático, retry, cache da lista de termos. |
-| `ferramentas/preparar.py <vis>` | Lê a vistoria, separa itens pendentes por cômodo, classifica padrão/atenção, baixa miniaturas e monta painéis. Somente leitura. |
-| `ferramentas/zoom.py <vis> <idx> n:k ...` | Foto original em grade 2x2 (até 4 por imagem), com recorte opcional `n:k@x0,y0,x1,y1`. |
+| `ferramentas/preparar.py <vis>` | Lê a vistoria, separa itens pendentes por cômodo, classifica padrão/atenção, baixa miniaturas, tira quadros dos vídeos (ffmpeg) e monta painéis. Somente leitura. |
+| `ferramentas/zoom.py <vis> <idx> n:k ...` | Foto original em grade 2x2 (até 4 por imagem), com recorte opcional `n:k@x0,y0,x1,y1`; quadro de vídeo: `n:vjqk`. |
 | `ferramentas/gravar.py <vis> <res.json>` | Grava um cômodo (detalhes, campos que faltam, notas, itens novos) e confere relendo do sistema. `--simular` não grava. |
 | `ferramentas/status.py <vis>` | Situação por cômodo direto do sistema; `--detalhe` lista os valores. |
 | `ferramentas/workflow_preencher.js` | Workflow: um cômodo por vez, leve + forte em paralelo, reavaliação dos suspeitos. |
