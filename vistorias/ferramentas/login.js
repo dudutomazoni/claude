@@ -12,15 +12,17 @@ const fs = require('fs');
   const browser = await chromium.launch(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {});
   const ctx = await browser.newContext({ viewport: { width: 1400, height: 1000 }, locale: 'pt-BR' });
   const page = await ctx.newPage();
-  let auth = null;
-  ctx.on('request', r => { const h = r.headers(); if (!auth && r.url().includes('api.sistemaspleno.com/api/vistoria/') && h.authorization) auth = h.authorization; });
+  // O portal também chama vistoria/configuracao com o token DO PORTAL: só vale o que vier depois de abrir o módulo.
+  let auth = null, modulo = false;
+  ctx.on('request', r => { const h = r.headers(); if (modulo && !auth && r.url().includes('api.sistemaspleno.com/api/vistoria/') && h.authorization) auth = h.authorization; });
   await page.goto('https://plusvistorias.sistemaspleno.com/portal/login', { waitUntil: 'networkidle' });
   await page.fill('#usu_email', process.env.PLENO_USER);
   await page.fill('#usu_senha', process.env.PLENO_PASS);
   await page.getByRole('button', { name: 'Próximo' }).first().click(); // NÃO usar Enter (aciona "Esqueceu sua senha?")
   await page.waitForTimeout(8000);
+  modulo = true;
   await page.goto('https://plusvistorias.sistemaspleno.com/vistorias/vistorias', { waitUntil: 'networkidle' });
-  for (let i = 0; i < 20 && !auth; i++) await page.waitForTimeout(1000);
+  for (let i = 0; i < 60 && !auth; i++) await page.waitForTimeout(1000); // o extLogin do módulo pode levar 20 s ou mais
   await browser.close();
   if (!auth) { console.error('Login falhou: token do módulo Vistoria não capturado.'); process.exit(1); }
   fs.writeFileSync(out, auth);
