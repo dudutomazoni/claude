@@ -106,6 +106,57 @@ def opcoes_detalhe(max_idade_h=24):
     return m
 
 
+_cache_campo = {}
+
+
+def opcoes_campo(tip_det_codigo, tip_amb_ite_codigo):
+    """Lista de opções que o site mostra para um campo de um tipo de item (mesma consulta do site)."""
+    k = (tip_det_codigo, tip_amb_ite_codigo)
+    if k not in _cache_campo:
+        r = get(f'tipoDetalheDescricao?tip_det_codigo={tip_det_codigo}&modelo=false&preferir_com_grupo=true'
+                f'&tip_amb_ite_codigo={tip_amb_ite_codigo}')
+        _cache_campo[k] = [{'tip_det_des_codigo': x['tip_det_des_codigo'], 'tip_det_descricao': x['tip_det_descricao']}
+                           for x in (r or []) if not x.get('deleted_at')]
+    return _cache_campo[k]
+
+
+def _como_form(v):
+    """Serializa como o formulário do site (null -> "", true/false -> 1/0)."""
+    if v is None:
+        return ''
+    if v is True:
+        return 1
+    if v is False:
+        return 0
+    if isinstance(v, dict):
+        return {k: _como_form(x) for k, x in v.items()}
+    if isinstance(v, list):
+        return [_como_form(x) for x in v]
+    return v
+
+
+def corpo_detalhe(det_des_codigo, amb_ite_codigo, tip_amb_ite_codigo, tip_det_codigo, tipo_detalhe, det_des_ordem,
+                  relacoes, codigos, nomes, amb_pos=0, mod_padrao=False):
+    """Corpo IDÊNTICO ao que o site envia ao marcar opções num campo (capturado em 22/10/2026).
+
+    O essencial é `descricoes`: a lista COMPLETA de opções do campo. Sem ela o sistema guarda o campo sem
+    opções e o app do telefone mostra o campo vazio de opções. Nunca envie só a opção escolhida.
+    """
+    lista = {}
+    for c, n in zip(codigos, nomes):                       # marcadas primeiro, como o site
+        lista[c] = n
+    for r in relacoes or []:
+        lista.setdefault(r['tip_det_des_codigo'], r['tip_det_descricao'])
+    for o in sorted(opcoes_campo(tip_det_codigo, tip_amb_ite_codigo), key=lambda o: o['tip_det_descricao'].casefold()):
+        lista.setdefault(o['tip_det_des_codigo'], o['tip_det_descricao'])
+    descricoes = [{'tip_det_des_codigo': c, 'tip_det_descricao': n} for c, n in lista.items()]
+    return _como_form({'det_des_codigo': det_des_codigo, 'amb_ite_codigo': amb_ite_codigo, 'cha_codigo': None, 'med_codigo': None,
+                       'det_des_ordem': det_des_ordem, 'det_des_mod_padrao': mod_padrao, 'tip_det_codigo': tip_det_codigo,
+                       'tipo_detalhe': tipo_detalhe, 'tipos_detalhes_descricoes': relacoes or [], 'startOpen': None,
+                       'tip_det_des_codigo_array': list(codigos), 'descricoes': descricoes, 'path': f'ambientes.{amb_pos}.itens',
+                       'tipoValue': tip_amb_ite_codigo, 'tipoLabel': 'tip_amb_ite_codigo'})
+
+
 def valores(dd):
     """Valores atuais de um detalhe (lista de descrições)."""
     v = [r['tip_det_descricao'] for r in dd.get('relacoes_detalhes_descricoes_tipos') or []]

@@ -12,6 +12,16 @@ Portal: https://plusvistorias.sistemaspleno.com · API usada pelo site: https://
   para relogar, porque o login do usuário no portal derruba o token). Alternativa só para a sessão atual: `~/.config/pleno/credenciais.json`
   (`{"usuario":..., "senha":...}`, chmod 600, fora do repositório). Nunca grave senha dentro do repositório.
 
+## Regras pedidas pelo usuário (22/10/2026) — valem para TODOS os campos e cômodos
+1. **Nunca apagar as demais opções de um campo.** Ao marcar uma opção (ex.: Cor "Branca"), a gravação tem de levar a lista
+   completa de opções do campo (`descricoes`), exatamente como o site faz. Sem isso o sistema guarda o campo sem opções e o
+   **app do telefone** fica sem opções para trocar. Grave sempre pelo `gravar.py` (usa `pleno.corpo_detalhe`); nunca monte o
+   PUT na mão. Campos já gravados do jeito antigo se consertam com `reparar_opcoes.py <vis> --data AAAA-MM-DD`
+   (a 190 já foi consertada: 491 campos, valores intactos).
+2. **Vaso sanitário:** o Material pode ter as duas opções juntas — "louça" e "descarga caixa acoplada" (quando tem caixa acoplada).
+3. **Vídeos:** sempre analisar quando houver. O `preparar.py` tira quadros de cada vídeo para os painéis e mede o som
+   (`som_max_db`: campainha/interfone tocando dá som alto); o `zoom.py` abre quadros (`n:vK:segundos`).
+
 ## Processo enxuto (um cômodo por vez, retomável)
 ```bash
 python3 vistorias/ferramentas/preparar.py <vis>          # lê em texto, pula o que já está preenchido, monta painéis; imprime ARGS_WORKFLOW

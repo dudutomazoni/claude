@@ -29,6 +29,15 @@ campos: preencha Material, Cor, Estado (e Avarias, se houver) normalmente — o 
 - **Avarias**: manchas, riscos, lascados, rachaduras, fissuras, furos, sinais de umidade, amassados, oxidação, sujeira, trincado, descascando,
   marcas, puxador solto, parte solta, bamba, gordura acumulada. Sem avaria: "".
 - Vários valores separados por vírgula ("MDF, marmore"). O gravar.py recusa termo inexistente no sistema: troque por um da lista e rode de novo.
+- **Vaso sanitário** com caixa acoplada: Material "louça, descarga caixa acoplada" (as duas opções).
+- Grave SÓ pelo gravar.py: ele marca a opção sem apagar as demais opções do campo (o app do telefone depende disso).
+
+## Vídeos (analise sempre que houver)
+- Miniaturas `n.Item vK Ts` são quadros do vídeo K no segundo T. Em `itens[].videos` da tarefa: `duracao_s` e `som_max_db`.
+- Vídeo costuma ser teste: campainha/interfone (som), luz acendendo, água saindo, descarga, portas e janelas abrindo, móvel balançando.
+  Use para Funcionamento e para avarias, como as fotos. `som_max_db` acima de cerca de -20 dB = som alto (campainha tocou);
+  perto de -90 dB = sem som.
+- Zoom num quadro: `n:vK:T` (ex.: `8:v1:1.2`).
 
 ## Notas (frase curta, inicial maiúscula, ponto final)
 - O que os campos não dizem: onde está a avaria, descrição do móvel, quantidade. Ex.: "Riscos escuros horizontais e marcas pontuais em algumas paredes." ·

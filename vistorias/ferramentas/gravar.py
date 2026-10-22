@@ -50,6 +50,7 @@ def main():
     if not amb:
         raise SystemExit(f"amb_codigo {res['amb_codigo']} não existe na vistoria {vis}")
     itens = {it['amb_ite_codigo']: it for it in amb['ambientes_itens']}
+    amb_pos = [a['amb_codigo'] for a in pleno.ambientes_ordenados(d)].index(amb['amb_codigo'])
     rejeitados, feitos, pulados, erros = [], [], [], []
     esperado = {}  # (amb_ite_codigo, tip_det) -> [termos]
 
@@ -107,17 +108,19 @@ def main():
             if cods is None:
                 continue
             esperado[(it['amb_ite_codigo'], td)] = nomes
+            tipo_it = it['tipo_ambiente_item']['tip_amb_ite_codigo']
             if td in dets:
                 dd = dets[td]
-                corpo = {'det_des_codigo': dd['det_des_codigo'], 'amb_ite_codigo': it['amb_ite_codigo'], 'cha_codigo': None,
-                         'med_codigo': None, 'det_des_ordem': dd['det_des_ordem'], 'tip_det_codigo': td,
-                         'tipo_detalhe': campo, 'tip_det_des_codigo_array': cods}
+                corpo = pleno.corpo_detalhe(dd['det_des_codigo'], it['amb_ite_codigo'], tipo_it, td, campo, dd['det_des_ordem'],
+                                            dd.get('relacoes_detalhes_descricoes_tipos'), cods, nomes, amb_pos, dd.get('det_des_mod_padrao'))
                 op('PUT', f"detalheDescricao/{dd['det_des_codigo']}/update", corpo, f'{nome_it} / {campo} = {val}')
             else:
-                corpo = {'det_des_codigo': None, 'amb_ite_codigo': it['amb_ite_codigo'], 'cha_codigo': None, 'med_codigo': None,
-                         'det_des_ordem': prox, 'tip_det_codigo': td, 'tipo_detalhe': campo, 'tip_det_des_codigo_array': cods}
+                corpo = pleno.corpo_detalhe(None, it['amb_ite_codigo'], tipo_it, td, campo, prox, [], cods, nomes, amb_pos)
                 prox += 1
-                op('POST', 'detalheDescricao/store', corpo, f'{nome_it} / {campo} (campo novo) = {val}')
+                ok, novo_det = op('POST', 'detalheDescricao/store', corpo, f'{nome_it} / {campo} (campo novo) = {val}')
+                if ok and not simular and isinstance(novo_det, dict) and novo_det.get('det_des_codigo'):
+                    corpo['det_des_codigo'] = novo_det['det_des_codigo']   # repete como o site: marcar = update com a lista completa
+                    op('PUT', f"detalheDescricao/{novo_det['det_des_codigo']}/update", corpo, f'{nome_it} / {campo} (lista de opções)')
         nota = (e.get('nota') or '').strip()
         if nota:
             if it.get('notas') and not sobrescrever:
@@ -169,12 +172,20 @@ def main():
         for o, td in enumerate(tds):
             if td == 2 and td not in campos:
                 continue  # Pintura fica de fora
-            linhas.append({'det_des_codigo': None, 'amb_ite_codigo': ite, 'cha_codigo': None, 'med_codigo': None, 'det_des_ordem': o,
-                           'tip_det_codigo': td, 'tipo_detalhe': info.get(td) or NOME_TD.get(td, str(td)),
-                           'tip_det_des_codigo_array': campos.get(td, ([], [], ''))[0], 'uniqId': f'n{ite}_{td}'})
+            cods, nomes, _ = campos.get(td, ([], [], ''))
+            linha = pleno.corpo_detalhe(None, ite, tipo[1], td, info.get(td) or NOME_TD.get(td, str(td)), o, [], cods, nomes, amb_pos)
+            linha['uniqId'] = f'n{ite}_{td}'
+            linhas.append(linha)
             if td in campos:
-                esperado[(ite, td)] = campos[td][1]
-        op('POST', 'detalheDescricao/storeMultiple', linhas, f'novo item {tipo[0]} / detalhes')
+                esperado[(ite, td)] = nomes
+        ok, criados = op('POST', 'detalheDescricao/storeMultiple', linhas, f'novo item {tipo[0]} / detalhes')
+        # como o site: marcar a opção = update com a lista completa de opções do campo
+        for c in (criados or []) if ok and isinstance(criados, list) else []:
+            linha = next((x for x in linhas if x['uniqId'] == c.get('uniqId') or (x['tip_det_codigo'] == c.get('tip_det_codigo'))), None)
+            if linha and linha['tip_det_des_codigo_array'] and c.get('det_des_codigo'):
+                corpo = {k: v for k, v in linha.items() if k != 'uniqId'}
+                corpo['det_des_codigo'] = c['det_des_codigo']
+                op('PUT', f"detalheDescricao/{c['det_des_codigo']}/update", corpo, f"novo item {tipo[0]} / {corpo['tipo_detalhe']} (lista de opções)")
         if (e.get('nota') or '').strip():
             op('POST', 'nota/store', {'amb_ite_codigo': ite, 'not_descricao': html_nota(e['nota']), 'not_ordem': 1}, f'novo item {tipo[0]} / nota')
     # 4) conferência

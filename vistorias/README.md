@@ -8,6 +8,7 @@
 | `ferramentas/zoom.py <vis> <idx> n:k ...` | Foto original em grade 2x2 (até 4 por imagem), com recorte opcional `n:k@x0,y0,x1,y1`. |
 | `ferramentas/gravar.py <vis> <res.json>` | Grava um cômodo (detalhes, campos que faltam, notas, itens novos) e confere relendo do sistema. `--simular` não grava. |
 | `ferramentas/status.py <vis>` | Situação por cômodo direto do sistema; `--detalhe` lista os valores. |
+| `ferramentas/reparar_opcoes.py <vis> --data AAAA-MM-DD` | Regrava (mesmos valores) campos gravados sem a lista de opções, para o app voltar a mostrar as opções. |
 | `ferramentas/workflow_preencher.js` | Workflow: um cômodo por vez, leve + forte em paralelo, reavaliação dos suspeitos. |
 | `padrao/regras_agente.md` | Regras e vocabulário curtos para os agentes. |
 | `padrao/classes_itens.json` | Itens "padrão" (modelo leve). O resto é "atenção". |
@@ -21,12 +22,13 @@
 | Ler vistoria completa | `GET vistoria/{vis}/show` |
 | Ler um item | `GET ambienteItem/{id}/show` |
 | Termos aceitos (todos) | `GET tipoDetalheDescricao` |
-| Termos sugeridos para um item | `GET tipoDetalheRelacao?tip_det_codigo=&tip_amb_ite_codigo=&tip_vis_codigo=&tip_amb_codigo=` |
+| Opções de um campo para um tipo de item (como o site) | `GET tipoDetalheDescricao?tip_det_codigo=&modelo=false&preferir_com_grupo=true&tip_amb_ite_codigo=` (a antiga `tipoDetalheRelacao` saiu na atualização de out/2026) |
 | Tipos de item de um tipo de cômodo | `GET tipoAmbienteItem?tip_amb_codigo=&tip_vis_codigo=` |
-| Gravar valor de um campo | `PUT detalheDescricao/{det_des_codigo}/update` `{det_des_codigo, amb_ite_codigo, det_des_ordem, tip_det_codigo, tipo_detalhe, tip_det_des_codigo_array:[códigos]}` |
-| Criar campo que falta no item | `POST detalheDescricao/store` (mesmo corpo, `det_des_codigo: null`) |
+| Gravar valor de um campo | `PUT detalheDescricao/{det_des_codigo}/update` com o corpo do site (capturado em 22/10/2026): `{det_des_codigo, amb_ite_codigo, cha_codigo:"", med_codigo:"", det_des_ordem, det_des_mod_padrao, tip_det_codigo, tipo_detalhe, tipos_detalhes_descricoes:[valores atuais], startOpen:"", tip_det_des_codigo_array:[códigos marcados], descricoes:[LISTA COMPLETA de opções {tip_det_des_codigo, tip_det_descricao}], path:"ambientes.N.itens", tipoValue:<tip_amb_ite_codigo>, tipoLabel:"tip_amb_ite_codigo"}` — sem `descricoes` o app do telefone fica sem opções. Montado por `pleno.corpo_detalhe`. |
+| Criar campo que falta no item | `POST detalheDescricao/store` (mesmo corpo, `det_des_codigo` vazio) e em seguida o PUT acima |
 | Criar item | `POST ambienteItem/storeMultiple` `[{amb_ite_quantidade, amb_codigo, tip_ite_codigo, tip_est_codigo:null, tip_vis_codigo}]` |
-| Criar campos do item novo (já com valores) | `POST detalheDescricao/storeMultiple` `[{..., tip_det_des_codigo_array, uniqId}]` |
+| Criar campos do item novo (já com valores) | `POST detalheDescricao/storeMultiple` `[{...corpo do site..., uniqId}]` e depois o PUT de cada campo marcado |
+| Vídeos | `videos[].path` (mp4) em itens e cômodos; quadros e som extraídos com ffmpeg pelo `preparar.py` |
 | Nota de item / de cômodo | `POST nota/store` `{amb_ite_codigo | amb_codigo, not_descricao:"<p>texto</p>", not_ordem}` |
 | Apagar item (só com ok) | `DELETE ambienteItem/{id}/destroy` |
 | Dados gerais da vistoria (só com ok) | `PUT vistoria/{vis}/update` com só os campos a mudar (ex.: `vis_observacoes`) |
