@@ -110,13 +110,26 @@ _cache_campo = {}
 
 
 def opcoes_campo(tip_det_codigo, tip_amb_ite_codigo):
-    """Lista de opções que o site mostra para um campo de um tipo de item (mesma consulta do site)."""
+    """Lista de opções que o site mostra para um campo de um tipo de item (mesma consulta do site).
+
+    Desde 26/10/2026 o servidor responde erro 42703 às consultas filtradas (inclusive a do site, `modelo=true`);
+    nesse caso usa a lista completa de opções do campo, para nunca gravar um campo sem opções.
+    """
     k = (tip_det_codigo, tip_amb_ite_codigo)
     if k not in _cache_campo:
-        r = get(f'tipoDetalheDescricao?tip_det_codigo={tip_det_codigo}&modelo=false&preferir_com_grupo=true'
-                f'&tip_amb_ite_codigo={tip_amb_ite_codigo}')
-        _cache_campo[k] = [{'tip_det_des_codigo': x['tip_det_des_codigo'], 'tip_det_descricao': x['tip_det_descricao']}
-                           for x in (r or []) if not x.get('deleted_at')]
+        r = None
+        for filtro in ('&modelo=false&preferir_com_grupo=true', '&modelo=true', ''):
+            try:
+                r = get(f'tipoDetalheDescricao?tip_det_codigo={tip_det_codigo}{filtro}&tip_amb_ite_codigo={tip_amb_ite_codigo}')
+            except RuntimeError:
+                continue
+            if r:
+                break
+        lista = [{'tip_det_des_codigo': x['tip_det_des_codigo'], 'tip_det_descricao': x['tip_det_descricao']}
+                 for x in (r or []) if not x.get('deleted_at')]
+        if not lista:
+            raise RuntimeError(f'sem lista de opções para o campo {tip_det_codigo} (tipo de item {tip_amb_ite_codigo})')
+        _cache_campo[k] = lista
     return _cache_campo[k]
 
 
