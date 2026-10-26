@@ -22,7 +22,7 @@
 | Ler vistoria completa | `GET vistoria/{vis}/show` |
 | Ler um item | `GET ambienteItem/{id}/show` |
 | Termos aceitos (todos) | `GET tipoDetalheDescricao` |
-| Opções de um campo para um tipo de item (como o site) | `GET tipoDetalheDescricao?tip_det_codigo=&modelo=false&preferir_com_grupo=true&tip_amb_ite_codigo=` (a antiga `tipoDetalheRelacao` saiu na atualização de out/2026) |
+| Opções de um campo para um tipo de item (como o site) | `GET tipoDetalheDescricao?tip_det_codigo=&modelo=false&preferir_com_grupo=true&tip_amb_ite_codigo=` (a antiga `tipoDetalheRelacao` saiu na atualização de out/2026). Site de 26/10/2026: `modelo=true` (ou `vis_codigo_modelo=`). Desde 26/10 o servidor dá erro 42703 nas duas consultas filtradas; o `pleno.opcoes_campo` usa então a lista completa do campo (`tipoDetalheDescricao?tip_det_codigo=`) e nunca grava sem opções. |
 | Tipos de item de um tipo de cômodo | `GET tipoAmbienteItem?tip_amb_codigo=&tip_vis_codigo=` |
 | Gravar valor de um campo | `PUT detalheDescricao/{det_des_codigo}/update` com o corpo do site (capturado em 22/10/2026): `{det_des_codigo, amb_ite_codigo, cha_codigo:"", med_codigo:"", det_des_ordem, det_des_mod_padrao, tip_det_codigo, tipo_detalhe, tipos_detalhes_descricoes:[valores atuais], startOpen:"", tip_det_des_codigo_array:[códigos marcados], descricoes:[LISTA COMPLETA de opções {tip_det_des_codigo, tip_det_descricao}], path:"ambientes.N.itens", tipoValue:<tip_amb_ite_codigo>, tipoLabel:"tip_amb_ite_codigo"}` — sem `descricoes` o app do telefone fica sem opções. Montado por `pleno.corpo_detalhe`. |
 | Criar campo que falta no item | `POST detalheDescricao/store` (mesmo corpo, `det_des_codigo` vazio) e em seguida o PUT acima |
@@ -41,3 +41,5 @@ Códigos de campo: Material 1, Pintura 2, Cor 3, Funcionamento 4, Marca 5, Estad
 - 189 (One Tower 3701, saída): comparativo entrada × saída com planilha; finalizada pela equipe.
 - 190 (Brava Garden 1303 A, saída): 132 itens preenchidos e conferidos (processo antigo, ~2,2 M tokens novos e ~209 M relidos em cache);
   usada como piloto do processo novo nos itens que vieram sem campos.
+- 212 (Ed La Salle 201, entrada): 185 itens em 11 cômodos, processo enxuto com Agent tool (leve + forte por cômodo, 6 reavaliações);
+  182 preenchidos, 3 sem fotos só com nota. Gravada com a lista completa de opções (servidor recusando a consulta filtrada).
