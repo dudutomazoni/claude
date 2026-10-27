@@ -41,3 +41,5 @@ Códigos de campo: Material 1, Pintura 2, Cor 3, Funcionamento 4, Marca 5, Estad
 - 189 (One Tower 3701, saída): comparativo entrada × saída com planilha; finalizada pela equipe.
 - 190 (Brava Garden 1303 A, saída): 132 itens preenchidos e conferidos (processo antigo, ~2,2 M tokens novos e ~209 M relidos em cache);
   usada como piloto do processo novo nos itens que vieram sem campos.
+- 214 (Império das Ondas 2402, saída): 213 itens preenchidos em 27/10/2026 pelo processo enxuto (Agent tool, leve + forte por cômodo);
+  lavabo criado do zero (17 itens), 3 itens novos (persiana, 2 duchas higiênicas); 2 itens sem foto ficaram só com nota.
