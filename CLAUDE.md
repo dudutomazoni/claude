@@ -18,6 +18,10 @@ Portal: https://plusvistorias.sistemaspleno.com · API usada pelo site: https://
    **app do telefone** fica sem opções para trocar. Grave sempre pelo `gravar.py` (usa `pleno.corpo_detalhe`); nunca monte o
    PUT na mão. Campos já gravados do jeito antigo se consertam com `reparar_opcoes.py <vis> --data AAAA-MM-DD`
    (a 190 já foi consertada: 491 campos, valores intactos).
+   **Atualização 27/10/2026:** mandar a lista não resolveu o app, e a causa NÃO é o preenchimento. Teste com a 214 (chegou do app
+   em 26/10, 908 campos, nenhum marcado, ninguém alterou pelo painel): ao baixar no app, as opções também sumiram. O app, ao
+   **baixar** uma vistoria do painel, mostra só as opções marcadas (ou nenhuma). Problema do app/sistema da Pleno → suporte.
+   Continue mandando a lista completa (é o que o site faz); não gaste tempo procurando outra causa no gravador.
 2. **Vaso sanitário:** o Material pode ter as duas opções juntas — "louça" e "descarga caixa acoplada" (quando tem caixa acoplada).
 3. **Vídeos:** sempre analisar quando houver. O `preparar.py` tira quadros de cada vídeo para os painéis e mede o som
    (`som_max_db`: campainha/interfone tocando dá som alto); o `zoom.py` abre quadros (`n:vK:segundos`).
