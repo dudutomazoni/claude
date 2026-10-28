@@ -17,7 +17,8 @@ const fs = require('fs');
   await page.goto('https://plusvistorias.sistemaspleno.com/portal/login', { waitUntil: 'networkidle' });
   await page.fill('#usu_email', process.env.PLENO_USER);
   await page.fill('#usu_senha', process.env.PLENO_PASS);
-  await page.getByRole('button', { name: 'Próximo' }).first().click(); // NÃO usar Enter (aciona "Esqueceu sua senha?")
+  // botão "Entrar" (tela nova, out/2026) ou "Próximo" (antiga). NÃO usar Enter (aciona "Esqueceu sua senha?")
+  await page.getByRole('button', { name: /^(Entrar|Próximo)/ }).first().click();
   await page.waitForTimeout(8000);
   await page.goto('https://plusvistorias.sistemaspleno.com/vistorias/vistorias', { waitUntil: 'networkidle' });
   for (let i = 0; i < 20 && !auth; i++) await page.waitForTimeout(1000);

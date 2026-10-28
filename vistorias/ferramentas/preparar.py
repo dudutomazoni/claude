@@ -199,7 +199,10 @@ def main():
         (pasta / f"comodo_{t['idx']}.json").write_text(json.dumps(t, ensure_ascii=False, indent=1))
         if info['padrao'] or info['atencao'] or info['sem_itens']:
             saida.append(info)
-    (pasta / 'fotos.json').write_text(json.dumps(fotos_url, ensure_ascii=False))
+    arq_fotos = pasta / 'fotos.json'
+    if so and arq_fotos.exists():  # rodada parcial (--comodos): mantém as fotos dos outros cômodos para o zoom
+        fotos_url = {**json.loads(arq_fotos.read_text()), **fotos_url}
+    arq_fotos.write_text(json.dumps(fotos_url, ensure_ascii=False))
     print(f"Vistoria {vis}: {d.get('vis_identificacao')} | tipo {d['tip_vis_codigo']}")
     for i in saida:
         print(f"  {i['idx']:>2}. {i['ambiente']:<18} padrão {i['padrao']:>2} | atenção {i['atencao']:>2} | sem itens {'sim' if i['sem_itens'] else 'não'} | painéis {i['paineis']}")
