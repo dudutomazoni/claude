@@ -41,3 +41,6 @@ Códigos de campo: Material 1, Pintura 2, Cor 3, Funcionamento 4, Marca 5, Estad
 - 189 (One Tower 3701, saída): comparativo entrada × saída com planilha; finalizada pela equipe.
 - 190 (Brava Garden 1303 A, saída): 132 itens preenchidos e conferidos (processo antigo, ~2,2 M tokens novos e ~209 M relidos em cache);
   usada como piloto do processo novo nos itens que vieram sem campos.
+- 219 (Ed Paris 1101 Bloco B, entrada, 28–29/10/2026): processo enxuto com o Agent tool (sem Workflow), um cômodo por vez;
+  171 itens preenchidos, 7 itens novos (4 na garagem, que veio sem itens), 848 gravações sem erro. Os 2 colchões cobertos
+  pela roupa de cama ficaram só com nota. Nesta data o portal trocou o botão de login para "Entrar" (login.js já aceita).
