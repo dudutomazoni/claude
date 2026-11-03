@@ -18,7 +18,9 @@ Regras:
   sozinha; termo inexistente é rejeitado e listado (saída com código 2) para correção.
 - Campo que o item não tem (ex.: Tapete sem 'Estado') é criado com detalheDescricao/store.
 - Itens novos: ambienteItem/storeMultiple + detalheDescricao/storeMultiple (campos já com valores) + nota.
-  Registro em trabalho/<vis>/novos_itens.json evita criar duas vezes se o script rodar de novo.
+  Registro em trabalho/<vis>/novos_itens.json evita criar duas vezes se o script rodar de novo; se o sistema
+  responder erro mas criar o item mesmo assim, o item criado é localizado e preenchido. Tipo que o sistema não
+  aceita no cômodo é recusado antes de criar (ele deixaria um item vazio).
 - No fim relê a vistoria e confere cada valor gravado. Log em trabalho/<vis>/gravacao.jsonl.
 """
 import html
@@ -136,14 +138,28 @@ def main():
     # 3) itens novos
     reg_arq = pasta / 'novos_itens.json'
     reg = json.loads(reg_arq.read_text()) if reg_arq.exists() else {}
-    for k, e in enumerate(res.get('novos_itens', [])):
-        chave = f"{amb['amb_codigo']}|{e['tipo']}|{(e.get('nota') or '')[:60]}|{k}"
+    aceitos = None  # tipos que o sistema aceita neste tipo de cômodo (outro tipo dá erro e deixa um item vazio criado)
+    if res.get('novos_itens'):
+        code, r = pleno.chamar('GET', f"tipoAmbienteItem?tip_amb_codigo={amb['tip_amb_codigo']}&tip_vis_codigo={d['tip_vis_codigo']}")
+        if code == '200' and isinstance(r, dict) and r.get('success') and r.get('data'):
+            aceitos = {x['tip_amb_ite_codigo'] for x in r['data']}
+            for x in r['data']:  # o sistema ganha tipos novos com o tempo: reconhece pelo nome da lista ao vivo
+                cat_low.setdefault(x['tip_amb_ite_descricao'].strip().lower(), (x['tip_amb_ite_descricao'], x['tip_amb_ite_codigo']))
+    vistos = {}
+    for e in res.get('novos_itens', []):
+        # chave não depende da posição na lista (o agente pode tirar um item recusado e rodar de novo)
+        base = f"{amb['amb_codigo']}|{e['tipo']}|{(e.get('nota') or '')[:60]}"
+        vistos[base] = vistos.get(base, -1) + 1
+        chave = f'{base}|{vistos[base]}'
         if chave in reg:
             pulados.append(f"novo item {e['tipo']} (já criado: {reg[chave]})")
             continue
         tipo = cat_low.get(e['tipo'].strip().lower())
         if not tipo:
             rejeitados.append((f"novo item '{e['tipo']}'", 'tipo inexistente no catálogo (padrao/tipos_itens.json)'))
+            continue
+        if aceitos is not None and tipo[1] not in aceitos:
+            rejeitados.append((f"novo item '{e['tipo']}'", 'tipo não aceito neste cômodo pelo sistema: descreva na nota do item mais próximo ou do cômodo'))
             continue
         campos = {}
         for campo, td in TD.items():
@@ -158,11 +174,22 @@ def main():
             continue
         ok, r = op('POST', 'ambienteItem/storeMultiple', [{'amb_ite_quantidade': int(e.get('qtd') or 1), 'amb_codigo': amb['amb_codigo'],
                    'tip_ite_codigo': tipo[1], 'tip_est_codigo': None, 'tip_vis_codigo': d['tip_vis_codigo']}], f"novo item {tipo[0]}")
-        if not ok:
-            continue
         if simular:
             continue
-        novo = r[0]
+        if not ok:
+            # Às vezes o sistema cria o item e mesmo assim responde erro: procura o item criado para preencher
+            # e para não criar outro ao rodar de novo.
+            a_novo = next(a for a in pleno.vistoria(vis)['ambientes'] if a['amb_codigo'] == amb['amb_codigo'])
+            conhecidos = set(itens) | set(reg.values())
+            orfaos = [it for it in a_novo['ambientes_itens']
+                      if it['amb_ite_codigo'] not in conhecidos and it.get('tip_ite_codigo') == tipo[1]]
+            if not orfaos:
+                continue
+            erros.pop()
+            novo = max(orfaos, key=lambda it: it['amb_ite_codigo'])
+            feitos.append(('200', f"novo item {tipo[0]} (o sistema deu erro, mas criou o item {novo['amb_ite_codigo']})"))
+        else:
+            novo = r[0]
         ite = novo['amb_ite_codigo']
         reg[chave] = ite
         reg_arq.write_text(json.dumps(reg, ensure_ascii=False, indent=1))

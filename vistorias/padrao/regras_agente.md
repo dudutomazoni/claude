@@ -52,13 +52,17 @@ campos: preencha Material, Cor, Estado (e Avarias, se houver) normalmente — o 
 - Cômodo SEM itens (ex.: lavabo): crie os itens a partir das fotos do cômodo (porta, piso, parede, teto, luminária, interruptor, tomada,
   balcão da pia, cuba, torneira, espelho, vaso sanitário, ralo, porta papel...).
 - Cômodo com itens: crie item só para objeto relevante visível e não cadastrado (máquina de lavar, banheira, mesa de cabeceira, poltrona...). Utensílios e pertences: não.
-- `tipo` precisa ser um destes: Aparador, Aquecedor, Ar condicionado, Armário, Armário aéreo, Balcão, Balcão da pia, Balcão do tanque, Banheira, Banqueta,
-  banquetas, Box, Cabeceira, Cadeira, Caixa disjuntora, Cama de casal, Cama de solteiro, Campainha, Cervejeira, Churrasqueira, Chuveiro, Colchão,
-  Cortina, Cortina de vidro, Criado mudo, Cuba, decoração, Depurador/coifa, Ducha higiênica, Espelho, Exaustor, Fechadura, Fogão, Forno elétrico,
-  Geladeira, Guarda corpo, Interfone, Interruptor, Janela, Luminária, Maquina Lava e Seca, Mesa, Mesa de Centro, Microondas, Parede, Persiana,
-  Piso, poltrona, Porta papel, Porta shampoo, Porta, batentes e guarnições, Portão, Prendedor de porta, puff, Rack para tv, Ralo, Rede de proteção,
-  Registro de água, Rodapés, Saboneteira, Saída de ar, Sifão, Sofá, Soleira, Suporte para cortina, Tampo da pia, Tampo do tanque, Tanque, Tapete,
-  Televisão, Teto, Tomada, Torneira, Trilho para cortina, Varal, Vaso sanitário, Ventilador de teto.
+- `tipo` precisa ser um destes: adega climatizadora, Aparador, Aquecedor, Ar condicionado, Armário, Armário aéreo, Balcão, Balcão da pia,
+  Balcão do tanque, bancada, Banco, Banheira, Banqueta, banquetas, Bebedouro, Box, Cabeceira, Cadeira, Cadeiras, Caixa disjuntora,
+  Cama de casal, Cama de solteiro, Campainha, Cerca Elétrica, Cervejeira, chaleira eletrica, Churrasqueira, Chuveiro, Closet, Colchão,
+  Corrimão, Cortina, Cortina de vidro, Criado mudo, Cristaleira, Cuba, decoração, Depurador/coifa, Ducha higiênica, Eletrodomésticos,
+  Equipamento de Som, Espelho, Exaustor, Fechadura, Fogão, Forno elétrico, Frigobar, Geladeira, Guarda corpo, Interfone, Interruptor,
+  Inventario, Janela, lava louça, liquidificador, Lixeira, Luminária, Maquina de Lavar Louça, Maquina de Lavar roupa,
+  Maquina de Secar roupa, Maquina Lava e Seca, maquinas, Mesa, Mesa de Centro, mesa escritório, Microondas, painel, Painel de TV,
+  Para peito, Parede, Penteadeira, Persiana, Persiana eletrônica integrada, Piscina, Piso, poltrona, Porta de vidro, Porta papel,
+  Porta shampoo, Porta, batentes e guarnições, Portão, Prendedor de porta, puff, Rack para tv, Ralo, Rede de proteção, Registro de água,
+  Rodapé, Rodapés, Roteador Wi-Fi, Saboneteira, Saída de ar, Sifão, Sofá, Soleira, Suporte para cortina, Tampo da pia, Tampo do tanque,
+  Tanque, Tapete, Televisão, Teto, Tomada, Torneira, Trilho para cortina, Varal, Vaso sanitário, Ventilador, Ventilador de teto.
   Objeto sem tipo na lista: descreva na nota do item mais próximo ou na nota do cômodo.
 
 ## Resultado e gravação
@@ -73,3 +77,5 @@ Salve o JSON em `trabalho/<vis>/res_<idx>_<sufixo>.json` (caminho indicado na ta
 ```
 Depois rode `python3 <ferramentas>/gravar.py <vis> <arquivo>`. Saída 0 = ok; 2 = termo/tipo rejeitado (corrija o JSON e rode de novo — é seguro,
 só grava o que falta); 1 = erro (relate). Responda apenas com o resumo pedido.
+Ao rodar de novo, use o MESMO arquivo (mesmos `novos_itens`, só com o termo corrigido ou o item recusado retirado): o gravar.py reconhece
+os itens novos pelo tipo e pela nota. Depois de saída 1 com item novo, não rode de novo: relate.

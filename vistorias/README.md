@@ -37,7 +37,34 @@
 Medidores são salvos pelo botão "Salvar" da tela (`PUT vistoria/{vis}/update` com o formulário inteiro): **não automatizado**.
 Códigos de campo: Material 1, Pintura 2, Cor 3, Funcionamento 4, Marca 5, Estado 6, Avarias 7.
 
+## Lições do sistema (juntadas em 03/11/2026 das conversas de cada vistoria)
+- Item novo de tipo **sem ligação com o tipo de cômodo**: o `ambienteItem/storeMultiple` responde erro mas às vezes cria o item
+  (ex.: decoração, Maquina Lava e Seca na área de serviço, Rodapés/Guarda corpo/Chuveiro na área externa, Área Técnica). O `gravar.py`
+  confere `tipoAmbienteItem` antes e, se mesmo assim der erro, localiza o item criado em vez de criar outro.
+- Recusas vistas em out/2026 (Quarto sem Cabeceira/Criado mudo, Sala sem banquetas, Área de serviço sem Maquina Lava e Seca) já não
+  valem: em 03/11/2026 todos os tipos de cômodo aceitam os 109 tipos de item. O `gravar.py` confere a lista ao vivo antes de criar.
+  O que não puder ser item vai na nota do cômodo.
+- Cômodos integrados (sala/cozinha/sacada): o agente tende a criar de novo objetos do cômodo vizinho (ex.: cortina) — conferir.
+- Nunca apagar itens vazios ou repetidos que sobraram: o Eduardo ajusta manualmente (ou dá o ok para apagar).
+- Baixar a vistoria no app mostra só as opções marcadas, mesmo sem nenhum preenchimento nosso (teste com a 214 em 27/10/2026): é do app.
+
 ## Histórico
 - 189 (One Tower 3701, saída): comparativo entrada × saída com planilha; finalizada pela equipe.
 - 190 (Brava Garden 1303 A, saída): 132 itens preenchidos e conferidos (processo antigo, ~2,2 M tokens novos e ~209 M relidos em cache);
-  usada como piloto do processo novo nos itens que vieram sem campos.
+  usada como piloto do processo novo nos itens que vieram sem campos; opções regravadas com a lista completa em 22/10.
+- 191 (Riviera Concept 1901, saída): 8 cômodos, 138 itens; lavabo criado do zero (14 itens); 3 itens sem foto só com nota.
+- 192 (Alameda Jardins 2004): 12 cômodos, 175 itens, 11 sem foto (só nota). Pendências com ok do Eduardo: 2 itens vazios na Sala,
+  Janela duplicada na Área de serviço (ele ajusta manualmente).
+- 193 (Brava Breeze 702, entrada): 153 itens.
+- 194 (Marinas Residence 3301, entrada): 15 cômodos, 267 itens (37 novos, inclusive Área Técnica e lavabo sem itens); 7 sem foto só com nota.
+- 195 (Porto Primavera 101, saída, 14/10): 12 cômodos, 182 itens; ficaram 3 itens vazios repetidos (41918, 41919, 41920) e a nota de
+  cômodo 1432 dizendo que não foi possível cadastrar: apagar só com ok.
+- 196 (Ed San Martin 921, entrada): 63 itens, 0 erros.
+- 205 (Ed Roma 803, entrada): 138 itens e 5 novos; tomada e porta papel do banheiro 6 (sem fotos) e colchão do quarto 8 (coberto) só com nota.
+- 209 (Ed. Amanda Carolina 103, 21/10): 112 de 113 itens, 9 criados na Área externa e na Área de serviço; a tomada do corredor não
+  aparece em nenhuma foto. (Depois foi baixada e reenviada pelo app, o que recria os campos e apaga o rastro das gravações.)
+- 210 (Casa Rua Mata Atlântica 5243, entrada): 93 itens (17 criados: Escada, Depósito e Área externa vieram sem itens); ~1,4 M tokens.
+- 212 (Ed La Salle 201, entrada, 26/10): 11 cômodos, 185 itens, 182 preenchidos, 3 sem foto só com nota.
+- 214 (Império das Ondas 2402, saída, 27/10): 213 itens; lavabo criado do zero (17 itens), 3 novos (persiana, 2 duchas higiênicas).
+- 219 (Ed Paris 1101 Bloco B, entrada, 28–29/10): 171 itens, 7 novos (4 na garagem, que veio sem itens), 848 gravações sem erro;
+  2 colchões cobertos pela roupa de cama só com nota. Nesta data o portal trocou o botão de login para "Entrar".

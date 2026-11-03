@@ -26,6 +26,14 @@ Portal: https://plusvistorias.sistemaspleno.com · API usada pelo site: https://
 3. **Vídeos:** sempre analisar quando houver. O `preparar.py` tira quadros de cada vídeo para os painéis e mede o som
    (`som_max_db`: campainha/interfone tocando dá som alto); o `zoom.py` abre quadros (`n:vK:segundos`).
 
+## Correções nas ferramentas valem para todas as conversas (decidido pelo usuário em 03/11/2026)
+- Toda conversa nova começa do branch padrão **`claude/eloquent-bell-sdl8jd`**. Correção feita só no branch da conversa se perde,
+  e a próxima vistoria quebra de novo (aconteceu 4 vezes com o botão "Entrar" do login e 4 vezes com o erro de item novo).
+- Por isso: corrigiu algo em `vistorias/ferramentas`, `vistorias/padrao`, `CLAUDE.md` ou o histórico do `vistorias/README.md`? Depois de
+  testar, leve a mudança também para `claude/eloquent-bell-sdl8jd` (`git fetch`, aplicar por cima da versão mais nova dele, push).
+  O usuário autorizou esse push. Antes de corrigir, faça `git fetch` e veja se o padrão já tem a correção.
+- Não repita ao usuário avisos de correção que já estão no padrão (ex.: o login já aceita "Entrar" e "Próximo").
+
 ## Processo enxuto (um cômodo por vez, retomável)
 ```bash
 python3 vistorias/ferramentas/preparar.py <vis>          # lê em texto, pula o que já está preenchido, monta painéis; imprime ARGS_WORKFLOW

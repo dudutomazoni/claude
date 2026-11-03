@@ -118,7 +118,8 @@ def main():
             if pleno.item_preenchido(it) and not todos:
                 continue
             nome_it = it['tipo_ambiente_item']['tip_amb_ite_descricao']
-            classe = 'padrao' if nome_it.lower() in classes else 'atencao'
+            # sem foto/vídeo próprio nem foto do cômodo: só o forte vê as fotos dos outros itens, onde o objeto costuma aparecer
+            classe = 'padrao' if nome_it.lower() in classes and (fotos or vids or fotos_amb) else 'atencao'
             campos = [CAMPOS.get(dd['tip_det_codigo'], dd['tipo_detalhe']['tip_det_nome'])
                       for dd in sorted(it.get('detalhe_descricao') or [], key=lambda x: x['det_des_ordem'])]
             campos = [c for c in campos if c != 'Pintura']
@@ -199,7 +200,10 @@ def main():
         (pasta / f"comodo_{t['idx']}.json").write_text(json.dumps(t, ensure_ascii=False, indent=1))
         if info['padrao'] or info['atencao'] or info['sem_itens']:
             saida.append(info)
-    (pasta / 'fotos.json').write_text(json.dumps(fotos_url, ensure_ascii=False))
+    arq_fotos = pasta / 'fotos.json'
+    if so and arq_fotos.exists():  # rodada parcial (--comodos): mantém as fotos dos outros cômodos para o zoom
+        fotos_url = {**json.loads(arq_fotos.read_text()), **fotos_url}
+    arq_fotos.write_text(json.dumps(fotos_url, ensure_ascii=False))
     print(f"Vistoria {vis}: {d.get('vis_identificacao')} | tipo {d['tip_vis_codigo']}")
     for i in saida:
         print(f"  {i['idx']:>2}. {i['ambiente']:<18} padrão {i['padrao']:>2} | atenção {i['atencao']:>2} | sem itens {'sim' if i['sem_itens'] else 'não'} | painéis {i['paineis']}")
