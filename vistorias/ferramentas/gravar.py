@@ -27,6 +27,7 @@ import html
 import json
 import os
 import sys
+import unicodedata
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import pleno  # noqa: E402
@@ -45,6 +46,11 @@ def main():
     opc_low = {}
     for k, v in opc.items():
         opc_low.setdefault(k.lower(), []).append(k)
+    def sem_acento(t):
+        return ''.join(c for c in unicodedata.normalize('NFD', t.lower()) if unicodedata.category(c) != 'Mn')
+    opc_sem = {}
+    for k in opc:
+        opc_sem.setdefault(sem_acento(k), []).append(k)
     cat = json.load(open(pleno.BASE / 'padrao' / 'tipos_itens.json'))['tipos_item']
     cat_low = {k.lower(): (k, v) for k, v in cat.items()}
     d = pleno.vistoria(vis)
@@ -76,6 +82,8 @@ def main():
                 nome = t
             elif len(opc_low.get(t.lower(), [])) >= 1:
                 nome = opc_low[t.lower()][0]
+            elif opc_sem.get(sem_acento(t)):  # "marmore" -> "Mármore"
+                nome = opc_sem[sem_acento(t)][0]
             else:
                 rejeitados.append((onde, t))
                 return None, None
