@@ -20,7 +20,7 @@ Itens com mais de 30 fotos aparecem em mosaico menor: procure close-ups (o visto
 Todo item da tarefa precisa sair com pelo menos Material, Cor e Estado (se tiver foto). `"campos_novos": true` = o item veio do app sem
 campos: preencha Material, Cor, Estado (e Avarias, se houver) normalmente — o gravar.py cria os campos. Ter nota não dispensa os campos.
 - **Material**: plástico, madeira, MDF, MDF embutido sob medida, porcelanato, Revestimento de porcelanato, gesso, led, metal, metal cromado, inox,
-  alvenaria, esquadria de alumínio e vidro, vidro, vidro liso, vidro e alumínio, louça, marmore, granito, quartzo, alumínio, vinílico, laminado,
+  alvenaria, esquadria de alumínio e vidro, vidro, vidro liso, vidro e alumínio, louça, Mármore, Granito, quartzo, alumínio, vinílico, laminado,
   couro, courino, tecido, Tecido estofado, tecido com espuma, espuma tipo box, tela de lcd, metal com vidro.
 - **Cor**: Branca, bege, prata, preta, cinza, bronze, marrom, rosa, dourado, azul, verde (feminino; só "Branca" com maiúscula).
 - **Funcionamento**: "funcionando" (padrão: os testes são do vistoriador). Se a FOTO mostrar defeito: "não funcionando" ou "funcionando parcialmente".
@@ -28,7 +28,7 @@ campos: preencha Material, Cor, Estado (e Avarias, se houver) normalmente — o 
 - **Estado**: "Em bom estado" ou "Em estado regular" (regular = avarias relevantes ou espalhadas).
 - **Avarias**: manchas, riscos, lascados, rachaduras, fissuras, furos, sinais de umidade, amassados, oxidação, sujeira, trincado, descascando,
   marcas, puxador solto, parte solta, bamba, gordura acumulada. Sem avaria: "".
-- Vários valores separados por vírgula ("MDF, marmore"). O gravar.py recusa termo inexistente no sistema: troque por um da lista e rode de novo.
+- Vários valores separados por vírgula ("MDF, Mármore"). O gravar.py recusa termo inexistente no sistema: troque por um da lista e rode de novo.
 - **Vaso sanitário** com caixa acoplada: Material "louça, descarga caixa acoplada" (as duas opções).
 - Grave SÓ pelo gravar.py: ele marca a opção sem apagar as demais opções do campo (o app do telefone depende disso).
 
