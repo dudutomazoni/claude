@@ -21,7 +21,8 @@ Todo item da tarefa precisa sair com pelo menos Material, Cor e Estado (se tiver
 campos: preencha Material, Cor, Estado (e Avarias, se houver) normalmente — o gravar.py cria os campos. Ter nota não dispensa os campos.
 - **Material**: plástico, madeira, MDF, MDF embutido sob medida, porcelanato, Revestimento de porcelanato, gesso, led, metal, metal cromado, inox,
   alvenaria, esquadria de alumínio e vidro, vidro, vidro liso, vidro e alumínio, louça, Mármore, Granito, quartzo, alumínio, vinílico, laminado,
-  couro, courino, tecido, Tecido estofado, tecido com espuma, espuma tipo box, tela de lcd, metal com vidro.
+  couro, courino, tecido, Tecido estofado, tecido com espuma, espuma tipo box, tela de lcd, metal com vidro, Papel de parede.
+  Parede revestida de papel de parede (inclusive texturizado): Material "Papel de parede" (existe no sistema; não use alvenaria nem vinílico).
 - **Cor**: Branca, bege, prata, preta, cinza, bronze, marrom, rosa, dourado, azul, verde (feminino; só "Branca" com maiúscula).
 - **Funcionamento**: "funcionando" (padrão: os testes são do vistoriador). Se a FOTO mostrar defeito: "não funcionando" ou "funcionando parcialmente".
 - **Marca**: só se legível na foto (Midea, Samsung, LG, Electrolux, Brastemp, Consul, Fischer, Agratto, Gree, Rinnai, Intelbrás, Deca, Docol, Lorenzetti, Tramontina...).
