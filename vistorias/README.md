@@ -68,3 +68,6 @@ Códigos de campo: Material 1, Pintura 2, Cor 3, Funcionamento 4, Marca 5, Estad
 - 214 (Império das Ondas 2402, saída, 27/10): 213 itens; lavabo criado do zero (17 itens), 3 novos (persiana, 2 duchas higiênicas).
 - 219 (Ed Paris 1101 Bloco B, entrada, 28–29/10): 171 itens, 7 novos (4 na garagem, que veio sem itens), 848 gravações sem erro;
   2 colchões cobertos pela roupa de cama só com nota. Nesta data o portal trocou o botão de login para "Entrar".
+- 223 (Porto Rotterdam 601, entrada, 04/11): 13 cômodos, 207 itens (6 criados na Área Técnica, que veio sem itens), 206 preenchidos,
+  0 erros; tomada do banheiro 5 sem foto só com nota. O Material de Parede no site só lista Alvenaria, alvenaria com azulejos,
+  drywall, gesso e Madeira; para papel de parede existe o termo "Papel de parede" (agora no vocabulário dos agentes).
