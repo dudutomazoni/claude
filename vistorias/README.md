@@ -71,3 +71,6 @@ Códigos de campo: Material 1, Pintura 2, Cor 3, Funcionamento 4, Marca 5, Estad
 - 223 (Porto Rotterdam 601, entrada, 04/11): 13 cômodos, 207 itens (6 criados na Área Técnica, que veio sem itens), 206 preenchidos,
   0 erros; tomada do banheiro 5 sem foto só com nota. O Material de Parede no site só lista Alvenaria, alvenaria com azulejos,
   drywall, gesso e Madeira; para papel de parede existe o termo "Papel de parede" (agora no vocabulário dos agentes).
+- 224 (Res Maria Regina Vanzo 1701, entrada, 05/11): 14 cômodos, 260 itens, 258 preenchidos, 1220 gravações sem erro; 9 criados
+  (8 na Área Técnica, que veio sem itens, e um prendedor de porta no quarto 13); tomada do quarto 5 e saboneteira do banheiro 6 sem
+  foto, só com nota. Bidê (sem tipo no sistema) descrito na nota do vaso nos banheiros 12 e 14; tapete de sisal gravado como "tecido".
