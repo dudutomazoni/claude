@@ -74,3 +74,7 @@ Códigos de campo: Material 1, Pintura 2, Cor 3, Funcionamento 4, Marca 5, Estad
 - 224 (Res Maria Regina Vanzo 1701, entrada, 05/11): 14 cômodos, 260 itens, 258 preenchidos, 1220 gravações sem erro; 9 criados
   (8 na Área Técnica, que veio sem itens, e um prendedor de porta no quarto 13); tomada do quarto 5 e saboneteira do banheiro 6 sem
   foto, só com nota. Bidê (sem tipo no sistema) descrito na nota do vaso nos banheiros 12 e 14; tapete de sisal gravado como "tecido".
+- 225 (Residencial Dona Anna 1101, 05/11): 9 cômodos, 152 itens (a Sala já veio preenchida, menos a decoração), 149 preenchidos,
+  612 gravações sem erro; 2 criados (criado-mudo no quarto 8, porta shampoo de mármore no banheiro 9). Interruptor e armário aéreo
+  da área de serviço e espelho do quarto 6 sem foto, só com nota. Janelas brancas contra a luz tinham saído "preta"/"cinza":
+  trocadas para "Branca" com ok do Eduardo (a da cozinha é preta de verdade; a da sacada é cortina de vidro prata).
