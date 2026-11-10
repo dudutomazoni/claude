@@ -46,6 +46,9 @@ Códigos de campo: Material 1, Pintura 2, Cor 3, Funcionamento 4, Marca 5, Estad
   O que não puder ser item vai na nota do cômodo.
 - Cômodos integrados (sala/cozinha/sacada): o agente tende a criar de novo objetos do cômodo vizinho (ex.: cortina) — conferir.
 - Nunca apagar itens vazios ou repetidos que sobraram: o Eduardo ajusta manualmente (ou dá o ok para apagar).
+- "Pintura nova" / "Pintura usada" não existem no campo Pintura (que só tem tipos de tinta: Acrílico, Esmalte...): são opções do
+  campo **Estado** de Parede, Teto, Porta e Rodapés. Quando o Eduardo disser que a pintura é nova, grave Estado "Pintura nova" e marque
+  as avarias normalmente (226).
 - Baixar a vistoria no app mostra só as opções marcadas, mesmo sem nenhum preenchimento nosso (teste com a 214 em 27/10/2026): é do app.
 
 ## Histórico
@@ -78,3 +81,5 @@ Códigos de campo: Material 1, Pintura 2, Cor 3, Funcionamento 4, Marca 5, Estad
   612 gravações sem erro; 2 criados (criado-mudo no quarto 8, porta shampoo de mármore no banheiro 9). Interruptor e armário aéreo
   da área de serviço e espelho do quarto 6 sem foto, só com nota. Janelas brancas contra a luz tinham saído "preta"/"cinza":
   trocadas para "Branca" com ok do Eduardo (a da cozinha é preta de verdade; a da sacada é cortina de vidro prata).
+- 226 (Kitnet, entrada, 10/11): 3 cômodos, 48 itens, 47 preenchidos, 0 erros; Parede e Teto da Sala e da Cozinha com Estado
+  "Pintura nova" a pedido do Eduardo. Persiana da Sala sem foto, só com nota. Marca Tivah do ar da Sala não existe na lista do sistema.
