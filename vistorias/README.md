@@ -83,3 +83,5 @@ Códigos de campo: Material 1, Pintura 2, Cor 3, Funcionamento 4, Marca 5, Estad
   trocadas para "Branca" com ok do Eduardo (a da cozinha é preta de verdade; a da sacada é cortina de vidro prata).
 - 226 (Kitnet, entrada, 10/11): 3 cômodos, 48 itens, 47 preenchidos, 0 erros; Parede e Teto da Sala e da Cozinha com Estado
   "Pintura nova" a pedido do Eduardo. Persiana da Sala sem foto, só com nota. Marca Tivah do ar da Sala não existe na lista do sistema.
+- 104 (Platinum Home 304, 11/11): 7 cômodos, 88 itens preenchidos, 0 erros; lavabo criado do zero (13 itens). Na primeira leitura o
+  sistema respondeu "Estamos preparando sua vistoria" (vistoria antiga sendo reaberta); tentar de novo segundos depois funcionou.
