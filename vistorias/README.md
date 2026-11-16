@@ -89,3 +89,7 @@ Códigos de campo: Material 1, Pintura 2, Cor 3, Funcionamento 4, Marca 5, Estad
   banheiro sem foto própria (avaliado pelas fotos da parede); janelas contra a luz conferidas no zoom (Sala/Cozinha Branca, Banheiro prata).
 - 229 (Kitnet 302, entrada, 16/11): 3 cômodos, 45 itens preenchidos, 205 gravações sem erro, nenhum item novo. Organizador de
   plástico transparente do banheiro (Armário aéreo) ficou sem Cor (não há "transparente" na lista; descrito na nota).
+- 230 (Lagorne Residence 101, entrada, 16/11): 8 cômodos, 112 itens, 111 preenchidos, 513 gravações sem erro; 2 criados (interfone
+  na Sala, máquina de lavar roupa na Área de serviço). Interruptor da cozinha sem foto, só com nota. Marca Chamalux do cooktop não
+  existe na lista do sistema; teto de policarbonato da área de serviço gravado como "plástico, alumínio" (não há policarbonato).
+  Janelas dos banheiros são basculantes de vidro sem moldura com ferragens pretas (Cor "preta" correta).
