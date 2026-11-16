@@ -85,3 +85,5 @@ Códigos de campo: Material 1, Pintura 2, Cor 3, Funcionamento 4, Marca 5, Estad
   "Pintura nova" a pedido do Eduardo. Persiana da Sala sem foto, só com nota. Marca Tivah do ar da Sala não existe na lista do sistema.
 - 104 (Platinum Home 304, 11/11): 7 cômodos, 88 itens preenchidos, 0 erros; lavabo criado do zero (13 itens). Na primeira leitura o
   sistema respondeu "Estamos preparando sua vistoria" (vistoria antiga sendo reaberta); tentar de novo segundos depois funcionou.
+- 229 (Kitnet 302, entrada, 16/11): 3 cômodos, 45 itens preenchidos, 205 gravações sem erro, nenhum item novo. Organizador de
+  plástico transparente do banheiro (Armário aéreo) ficou sem Cor (não há "transparente" na lista; descrito na nota).
