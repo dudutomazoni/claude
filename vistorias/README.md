@@ -93,3 +93,7 @@ Códigos de campo: Material 1, Pintura 2, Cor 3, Funcionamento 4, Marca 5, Estad
   na Sala, máquina de lavar roupa na Área de serviço). Interruptor da cozinha sem foto, só com nota. Marca Chamalux do cooktop não
   existe na lista do sistema; teto de policarbonato da área de serviço gravado como "plástico, alumínio" (não há policarbonato).
   Janelas dos banheiros são basculantes de vidro sem moldura com ferragens pretas (Cor "preta" correta).
+- 231 (Uranus 902, entrada, 17/11): 11 cômodos, 124 itens, 115 preenchidos, 549 gravações sem erro; 6 criados (5 na Área Técnica,
+  que veio sem itens, e uma torneira de parede na Cozinha). 8 luminárias ausentes (só ponto de luz/bocal no teto): campos vazios, só
+  nota. Ralo da área de serviço sem foto, só com nota. Banheira de hidromassagem gravada como "plástico" (não há acrílico na lista).
+  Cômodos rodados com o Agent tool (sem Workflow), vários em paralelo, sem conflito de login.
