@@ -97,3 +97,8 @@ Códigos de campo: Material 1, Pintura 2, Cor 3, Funcionamento 4, Marca 5, Estad
   que veio sem itens, e uma torneira de parede na Cozinha). 8 luminárias ausentes (só ponto de luz/bocal no teto): campos vazios, só
   nota. Ralo da área de serviço sem foto, só com nota. Banheira de hidromassagem gravada como "plástico" (não há acrílico na lista).
   Cômodos rodados com o Agent tool (sem Workflow), vários em paralelo, sem conflito de login.
+- 232 (Ed Espanha 202, entrada, 18/11): 8 cômodos, 102 itens, 96 preenchidos, 436 gravações sem erro, nenhum item novo. **Imóvel sem
+  energia elétrica**: a pedido do Eduardo, tudo o que depende de energia (tomadas, interruptores, luminárias, campainha, interfone,
+  quadro de disjuntores, cooktop, coifa, exaustor, chuveiros elétricos) com Funcionamento "não testado" (termo 726; o gravar.py aceita,
+  mesmo que a lista do campo mostre só Funcionando/parcialmente/não funcionando). 6 luminárias ausentes (só ponto de luz): campos
+  vazios, só nota. Esquadrias pretas de verdade (conferidas no zoom). Rodado com o Agent tool, todos os cômodos em paralelo.
