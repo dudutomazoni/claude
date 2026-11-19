@@ -104,3 +104,9 @@ Códigos de campo: Material 1, Pintura 2, Cor 3, Funcionamento 4, Marca 5, Estad
   quadro de disjuntores, cooktop, coifa, exaustor, chuveiros elétricos) com Funcionamento "não testado" (termo 726; o gravar.py aceita,
   mesmo que a lista do campo mostre só Funcionando/parcialmente/não funcionando). 6 luminárias ausentes (só ponto de luz): campos
   vazios, só nota. Esquadrias pretas de verdade (conferidas no zoom). Rodado com o Agent tool, todos os cômodos em paralelo.
+- 234 (Ed Marco Guilhermo 903, entrada, 19/11): 8 cômodos, 139 itens, 135 preenchidos, 657 gravações sem erro; 10 criados (9 na
+  Sacada, que veio sem itens, e um porta papel no banheiro 7). Neste dia a API mudou para `api-vistorias.sistemaspleno.com` (login.js e
+  pleno.py ajustados). Sem foto, só com nota: interruptor da área de serviço, janela do banheiro 6, persiana do quarto 8; colchão do
+  quarto 5 coberto pela colcha. Marca Comfee do ar do quarto 5 não existe na lista. Fissura na parede do banheiro 7 (acima do espelho)
+  vista pelo agente leve e confirmada no zoom depois que o forte já tinha gravado a parede: acrescentada com `--sobrescrever` só em
+  Avarias (vazio) + nota nova. Janela do quarto 8 em alumínio natural ("Prata"); as outras são brancas.
