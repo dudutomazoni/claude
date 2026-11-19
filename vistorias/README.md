@@ -17,6 +17,8 @@
 `trabalho/` (ignorado pelo git) guarda token, painéis, fotos e logs (`trabalho/<vis>/gravacao.jsonl`).
 
 ## Rotas da API (mesmas do site; testadas em 09/10/2026)
+Endereço base: `https://api-vistorias.sistemaspleno.com/` desde 19/11/2026 (antes `https://api.sistemaspleno.com/api/vistoria/`, que ainda
+responde, mas o site já não chama: o login não capturava o token). O `login.js` grava em `trabalho/api.txt` o endereço que o site usou.
 | Ação | Rota |
 |---|---|
 | Ler vistoria completa | `GET vistoria/{vis}/show` |
