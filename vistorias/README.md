@@ -110,3 +110,6 @@ Códigos de campo: Material 1, Pintura 2, Cor 3, Funcionamento 4, Marca 5, Estad
   quarto 5 coberto pela colcha. Marca Comfee do ar do quarto 5 não existe na lista. Fissura na parede do banheiro 7 (acima do espelho)
   vista pelo agente leve e confirmada no zoom depois que o forte já tinha gravado a parede: acrescentada com `--sobrescrever` só em
   Avarias (vazio) + nota nova. Janela do quarto 8 em alumínio natural ("Prata"); as outras são brancas.
+- 235 (Res Ambar 1402, entrada, 19/11): 10 cômodos, 174 itens, 172 preenchidos, 787 gravações sem erro; 1 criado (rede de proteção
+  na Sacada). Tomadas do Corredor e do Banheiro 6 sem foto, só com nota. Porta shampoo do Banheiro 8 avaliado pelas fotos da parede
+  do box (a foto do item mostra a caixa acoplada). Nesta data a API mudou para `api-vistorias.sistemaspleno.com` (login corrigido).
