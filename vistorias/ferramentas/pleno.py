@@ -15,7 +15,14 @@ BASE = pathlib.Path(__file__).resolve().parent.parent          # vistorias/
 FERR = BASE / 'ferramentas'
 TRAB = BASE / 'trabalho'
 TOKEN = TRAB / 'token.txt'
-API = 'https://api-vistorias.sistemaspleno.com/'   # até 18/11/2026 era https://api.sistemaspleno.com/api/vistoria/ (mesmas rotas)
+API_BASE = TRAB / 'api_base.txt'      # gravado pelo login.js com o endereço que o site está usando
+API_PADRAO = 'https://api-vistorias.sistemaspleno.com/'   # mudou em 19/11/2026 (antes: https://api.sistemaspleno.com/api/vistoria/)
+
+
+def _api():
+    if API_BASE.exists() and API_BASE.read_text().strip():
+        return API_BASE.read_text().strip()
+    return API_PADRAO
 
 
 def pasta_vis(vis):
@@ -60,7 +67,7 @@ def chamar(metodo, rota, corpo=None, tentativas=3):
     for t in range(tentativas):
         tok = _token()
         args = ['curl', '-g', '-sS', '--max-time', '120', '-X', metodo, '-H', f'Authorization: {tok}',
-                '-H', 'Accept: application/json', '-H', 'Content-Type: application/json', '-w', '\n%{http_code}', API + rota]
+                '-H', 'Accept: application/json', '-H', 'Content-Type: application/json', '-w', '\n%{http_code}', _api() + rota]
         if corpo is not None:
             args += ['--data-binary', json.dumps(corpo, ensure_ascii=False)]
         out = subprocess.run(args, capture_output=True, text=True).stdout

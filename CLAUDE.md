@@ -1,7 +1,7 @@
 # Plus Vistorias — preenchimento de vistorias no sistema Pleno
 
 Usuário: Eduardo (Plus Vistorias, Balneário Camboriú/SC). Fale em **português simples** (não é técnico).
-Portal: https://plusvistorias.sistemaspleno.com · API usada pelo site: https://api.sistemaspleno.com/api/vistoria/
+Portal: https://plusvistorias.sistemaspleno.com · API usada pelo site: https://api-vistorias.sistemaspleno.com/ (até 18/11/2026 era https://api.sistemaspleno.com/api/vistoria/; o `login.js` aceita os dois e grava o endereço visto em `trabalho/api_base.txt`)
 
 ## Autorizações (decididas pelo usuário em 09/10/2026)
 - **Preenchimento dos itens** (material, cor, funcionamento, marca, estado, avarias, notas, campos que faltam, itens novos — inclusive
