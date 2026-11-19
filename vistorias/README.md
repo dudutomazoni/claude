@@ -106,5 +106,14 @@ Códigos de campo: Material 1, Pintura 2, Cor 3, Funcionamento 4, Marca 5, Estad
   vazios, só nota. Esquadrias pretas de verdade (conferidas no zoom). Rodado com o Agent tool, todos os cômodos em paralelo.
 - 233 (Argos 1502, entrada, 19/11): 13 cômodos, 216 itens, 212 preenchidos, 959 gravações sem erro; 10 criados na Área Técnica, que veio
   sem itens (inclusive 4 condensadoras: conferir a quantidade no local). Tomada do banheiro 6 e porta papel dos banheiros 9, 11 e 13 sem
-  foto, só com nota. Esquadrias pretas de verdade (conferidas no zoom); interruptor touch de vidro preto na Sala. Nesta data a API do site
-  mudou para api-vistorias.sistemaspleno.com (o login não pegava o token). Rodado com o Agent tool, todos os cômodos em paralelo.
+  foto, só com nota. Esquadrias pretas de verdade (conferidas no zoom); interruptor touch de vidro preto na Sala. Rodado com o Agent
+  tool, todos os cômodos em paralelo; suspeitos dos leves reavaliados em 3 agentes fortes (3 cômodos cada).
+- 234 (Ed Marco Guilhermo 903, entrada, 19/11): 8 cômodos, 139 itens, 135 preenchidos, 657 gravações sem erro; 10 criados (9 na
+  Sacada, que veio sem itens, e um porta papel no banheiro 7). Neste dia a API mudou para `api-vistorias.sistemaspleno.com` (login.js e
+  pleno.py ajustados). Sem foto, só com nota: interruptor da área de serviço, janela do banheiro 6, persiana do quarto 8; colchão do
+  quarto 5 coberto pela colcha. Marca Comfee do ar do quarto 5 não existe na lista. Fissura na parede do banheiro 7 (acima do espelho)
+  vista pelo agente leve e confirmada no zoom depois que o forte já tinha gravado a parede: acrescentada com `--sobrescrever` só em
+  Avarias (vazio) + nota nova. Janela do quarto 8 em alumínio natural ("Prata"); as outras são brancas.
+- 235 (Res Ambar 1402, entrada, 19/11): 10 cômodos, 174 itens, 172 preenchidos, 787 gravações sem erro; 1 criado (rede de proteção
+  na Sacada). Tomadas do Corredor e do Banheiro 6 sem foto, só com nota. Porta shampoo do Banheiro 8 avaliado pelas fotos da parede
+  do box (a foto do item mostra a caixa acoplada). Nesta data a API mudou para `api-vistorias.sistemaspleno.com` (login corrigido).
