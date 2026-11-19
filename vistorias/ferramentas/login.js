@@ -28,8 +28,14 @@ async function clicarEntrar(page) {
   const ctx = await browser.newContext({ viewport: { width: 1400, height: 1000 }, locale: 'pt-BR' });
   const page = await ctx.newPage();
   // O portal também chama a API de vistoria com o token DO PORTAL: só vale o que vier depois de abrir o módulo.
-  let auth = null, modulo = false;
-  ctx.on('request', r => { const h = r.headers(); if (modulo && !auth && r.url().includes('api.sistemaspleno.com/api/vistoria/') && h.authorization) auth = h.authorization; });
+  // O endereço da API mudou em 19/11/2026 (api.sistemaspleno.com/api/vistoria/ -> api-vistorias.sistemaspleno.com/):
+  // aceita os dois e grava o endereço visto em api_base.txt (ao lado do token), que o pleno.py usa.
+  const APIS = [/^https:\/\/api-vistorias\.sistemaspleno\.com\//, /^https:\/\/api\.sistemaspleno\.com\/api\/vistoria\//];
+  let auth = null, base = null, modulo = false;
+  ctx.on('request', r => {
+    const h = r.headers(); if (!modulo || auth || !h.authorization) return;
+    for (const re of APIS) { const m = r.url().match(re); if (m) { auth = h.authorization; base = m[0]; return; } }
+  });
   await page.goto('https://plusvistorias.sistemaspleno.com/portal/login', { waitUntil: 'networkidle' });
   await page.fill('#usu_email', process.env.PLENO_USER);
   await page.fill('#usu_senha', process.env.PLENO_PASS);
@@ -41,5 +47,6 @@ async function clicarEntrar(page) {
   await browser.close();
   if (!auth) { console.error('Login falhou: token do módulo Vistoria não capturado.'); process.exit(1); }
   fs.writeFileSync(out, auth);
-  console.log('token ok');
+  fs.writeFileSync(require('path').join(require('path').dirname(out), 'api_base.txt'), base);
+  console.log('token ok', base);
 })().catch(e => { console.error(e); process.exit(1); });
