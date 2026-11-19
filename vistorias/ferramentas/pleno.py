@@ -15,16 +15,14 @@ BASE = pathlib.Path(__file__).resolve().parent.parent          # vistorias/
 FERR = BASE / 'ferramentas'
 TRAB = BASE / 'trabalho'
 TOKEN = TRAB / 'token.txt'
-API_PADRAO = 'https://api-vistorias.sistemaspleno.com/'   # endereço novo (nov/2026); o antigo era api.sistemaspleno.com/api/vistoria/
-API_TXT = TRAB / 'api.txt'                                  # gravado pelo login.js com o endereço que o site usou
+API_BASE = TRAB / 'api_base.txt'      # gravado pelo login.js com o endereço que o site está usando
+API_PADRAO = 'https://api-vistorias.sistemaspleno.com/'   # mudou em 19/11/2026 (antes: https://api.sistemaspleno.com/api/vistoria/)
 
 
 def _api():
-    try:
-        a = API_TXT.read_text().strip()
-        return a if a.startswith('https://') else API_PADRAO
-    except OSError:
-        return API_PADRAO
+    if API_BASE.exists() and API_BASE.read_text().strip():
+        return API_BASE.read_text().strip()
+    return API_PADRAO
 
 
 def pasta_vis(vis):
