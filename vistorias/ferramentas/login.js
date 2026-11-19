@@ -29,7 +29,10 @@ async function clicarEntrar(page) {
   const page = await ctx.newPage();
   // O portal também chama a API de vistoria com o token DO PORTAL: só vale o que vier depois de abrir o módulo.
   let auth = null, modulo = false;
-  ctx.on('request', r => { const h = r.headers(); if (modulo && !auth && r.url().includes('api.sistemaspleno.com/api/vistoria/') && h.authorization) auth = h.authorization; });
+  // A API do módulo mudou de endereço em 19/11/2026: api.sistemaspleno.com/api/vistoria/ -> api-vistorias.sistemaspleno.com/
+  // (aceita os dois; ignora validarTokenV2, que vem sem header)
+  const API_VIS = /api-vistorias\.sistemaspleno\.com\/|api\.sistemaspleno\.com\/api\/vistoria\//;
+  ctx.on('request', r => { const h = r.headers(); if (modulo && !auth && API_VIS.test(r.url()) && h.authorization) auth = h.authorization; });
   await page.goto('https://plusvistorias.sistemaspleno.com/portal/login', { waitUntil: 'networkidle' });
   await page.fill('#usu_email', process.env.PLENO_USER);
   await page.fill('#usu_senha', process.env.PLENO_PASS);

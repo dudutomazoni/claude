@@ -15,7 +15,7 @@ BASE = pathlib.Path(__file__).resolve().parent.parent          # vistorias/
 FERR = BASE / 'ferramentas'
 TRAB = BASE / 'trabalho'
 TOKEN = TRAB / 'token.txt'
-API = 'https://api.sistemaspleno.com/api/vistoria/'
+API = 'https://api-vistorias.sistemaspleno.com/'   # até 18/11/2026 era https://api.sistemaspleno.com/api/vistoria/ (mesmas rotas)
 
 
 def pasta_vis(vis):
