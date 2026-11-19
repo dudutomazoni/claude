@@ -104,3 +104,7 @@ Códigos de campo: Material 1, Pintura 2, Cor 3, Funcionamento 4, Marca 5, Estad
   quadro de disjuntores, cooktop, coifa, exaustor, chuveiros elétricos) com Funcionamento "não testado" (termo 726; o gravar.py aceita,
   mesmo que a lista do campo mostre só Funcionando/parcialmente/não funcionando). 6 luminárias ausentes (só ponto de luz): campos
   vazios, só nota. Esquadrias pretas de verdade (conferidas no zoom). Rodado com o Agent tool, todos os cômodos em paralelo.
+- 233 (Argos 1502, entrada, 19/11): 13 cômodos, 216 itens, 212 preenchidos, 959 gravações sem erro; 10 criados na Área Técnica, que veio
+  sem itens (inclusive 4 condensadoras: conferir a quantidade no local). Tomada do banheiro 6 e porta papel dos banheiros 9, 11 e 13 sem
+  foto, só com nota. Esquadrias pretas de verdade (conferidas no zoom); interruptor touch de vidro preto na Sala. Nesta data a API do site
+  mudou para api-vistorias.sistemaspleno.com (o login não pegava o token). Rodado com o Agent tool, todos os cômodos em paralelo.
