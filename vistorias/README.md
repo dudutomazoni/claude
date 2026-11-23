@@ -117,3 +117,6 @@ Códigos de campo: Material 1, Pintura 2, Cor 3, Funcionamento 4, Marca 5, Estad
 - 235 (Res Ambar 1402, entrada, 19/11): 10 cômodos, 174 itens, 172 preenchidos, 787 gravações sem erro; 1 criado (rede de proteção
   na Sacada). Tomadas do Corredor e do Banheiro 6 sem foto, só com nota. Porta shampoo do Banheiro 8 avaliado pelas fotos da parede
   do box (a foto do item mostra a caixa acoplada). Nesta data a API mudou para `api-vistorias.sistemaspleno.com` (login corrigido).
+- 236 (Sala Comercial, saída, 23/11): 1 cômodo, 10 itens preenchidos, 51 gravações sem erro, nenhum item novo. Feita direto, sem
+  agentes (cômodo pequeno). Paredes mistas (alvenaria e divisórias modulares) gravadas como "Alvenaria, drywall"; forro modular em
+  placas como "gesso"; basculante de vidro sem moldura como "vidro". Ar condicionado Gree (lido no controle e no aparelho).
