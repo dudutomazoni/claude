@@ -23,7 +23,9 @@ campos: preencha Material, Cor, Estado (e Avarias, se houver) normalmente — o 
   alvenaria, esquadria de alumínio e vidro, vidro, vidro liso, vidro e alumínio, louça, Mármore, Granito, quartzo, alumínio, vinílico, laminado,
   couro, courino, tecido, Tecido estofado, tecido com espuma, espuma tipo box, tela de lcd, metal com vidro, Papel de parede.
   Parede revestida de papel de parede (inclusive texturizado): Material "Papel de parede" (existe no sistema; não use alvenaria nem vinílico).
-- **Cor**: Branca, bege, prata, preta, cinza, bronze, marrom, rosa, dourado, azul, verde (feminino; só "Branca" com maiúscula).
+  Piso: a lista do site também tem cerâmica, cimento bruto (contrapiso, bloco de concreto), Cimento Queimado, Madeira.
+- **Cor**: Branca, bege, prata, preta, cinza, bronze, marrom, rosa, dourado, azul, verde, vermelha (feminino; só "Branca" com maiúscula), e "Amarelo", "roxo" (lilás) assim, como na lista da Parede.
+  Parede colorida: grave a cor no campo (ex.: "Branca, Amarelo"), não só na nota.
   Janela fotografada contra a luz: a esquadria branca sai escura na foto — olhe o perfil iluminado antes de gravar "preta" ou "cinza".
 - **Funcionamento**: "funcionando" (padrão: os testes são do vistoriador). Se a FOTO mostrar defeito: "não funcionando" ou "funcionando parcialmente".
 - **Marca**: só se legível na foto (Midea, Samsung, LG, Electrolux, Brastemp, Consul, Fischer, Agratto, Gree, Rinnai, Intelbrás, Deca, Docol, Lorenzetti, Tramontina...).
