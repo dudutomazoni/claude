@@ -120,3 +120,9 @@ Códigos de campo: Material 1, Pintura 2, Cor 3, Funcionamento 4, Marca 5, Estad
 - 236 (Sala Comercial, saída, 23/11): 1 cômodo, 10 itens preenchidos, 51 gravações sem erro, nenhum item novo. Feita direto, sem
   agentes (cômodo pequeno). Paredes mistas (alvenaria e divisórias modulares) gravadas como "Alvenaria, drywall"; forro modular em
   placas como "gesso"; basculante de vidro sem moldura como "vidro". Ar condicionado Gree (lido no controle e no aparelho).
+- 237 (Casa Rua Islândia 220, comercial, 24/11): 21 cômodos, 213 itens, 211 preenchidos, ~1000 gravações sem erro; 11 criados (8 na
+  Área Superior, que veio sem itens, e luminárias de emergência nas Salas 1, 2 e 8). Tomada do Corredor e janela do Lavabo (cômodo 10)
+  sem foto, só com nota. A lista de Cor da Parede no site tem Amarelo, roxo e vermelha, e a de Material do Piso tem cerâmica, cimento
+  bruto, Cimento Queimado e Madeira; os agentes não sabiam e deixaram paredes amarelas/lilás só na nota (vocabulário corrigido).
+  Rodado com o Agent tool, todos os cômodos em paralelo (limite de 20 agentes ao mesmo tempo); os suspeitos do leve foram passados
+  ao forte do mesmo cômodo, sem agente extra.
