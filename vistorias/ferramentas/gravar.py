@@ -23,6 +23,7 @@ Regras:
   aceita no cômodo é recusado antes de criar (ele deixaria um item vazio).
 - No fim relê a vistoria e confere cada valor gravado. Log em trabalho/<vis>/gravacao.jsonl.
 """
+import fcntl
 import html
 import json
 import os
@@ -34,6 +35,22 @@ import pleno  # noqa: E402
 
 TD = {'Material': 1, 'Cor': 3, 'Funcionamento': 4, 'Marca': 5, 'Estado': 6, 'Avarias': 7}
 NOME_TD = {v: k for k, v in TD.items()}
+
+
+def ler_registro(reg_arq):
+    return json.loads(reg_arq.read_text()) if reg_arq.exists() and reg_arq.read_text().strip() else {}
+
+
+def registrar(reg_arq, chave, ite):
+    """Acrescenta um item novo ao registro com trava: vários agentes gravam cômodos em paralelo e, sem a trava,
+    um sobrescreveria o registro do outro (e o item seria criado de novo quando o outro rodasse outra vez)."""
+    with open(reg_arq.parent / '.novos_itens.lock', 'w') as trava:
+        fcntl.flock(trava, fcntl.LOCK_EX)
+        reg = ler_registro(reg_arq)
+        reg[chave] = ite
+        tmp = reg_arq.with_suffix('.tmp')
+        tmp.write_text(json.dumps(reg, ensure_ascii=False, indent=1))
+        os.replace(tmp, reg_arq)
 
 
 def main():
@@ -145,7 +162,7 @@ def main():
                                   'not_ordem': len(amb.get('notas') or []) + 1}, 'nota do cômodo')
     # 3) itens novos
     reg_arq = pasta / 'novos_itens.json'
-    reg = json.loads(reg_arq.read_text()) if reg_arq.exists() else {}
+    reg = ler_registro(reg_arq)
     aceitos = None  # tipos que o sistema aceita neste tipo de cômodo (outro tipo dá erro e deixa um item vazio criado)
     if res.get('novos_itens'):
         code, r = pleno.chamar('GET', f"tipoAmbienteItem?tip_amb_codigo={amb['tip_amb_codigo']}&tip_vis_codigo={d['tip_vis_codigo']}")
@@ -188,7 +205,7 @@ def main():
             # Às vezes o sistema cria o item e mesmo assim responde erro: procura o item criado para preencher
             # e para não criar outro ao rodar de novo.
             a_novo = next(a for a in pleno.vistoria(vis)['ambientes'] if a['amb_codigo'] == amb['amb_codigo'])
-            conhecidos = set(itens) | set(reg.values())
+            conhecidos = set(itens) | set(ler_registro(reg_arq).values())
             orfaos = [it for it in a_novo['ambientes_itens']
                       if it['amb_ite_codigo'] not in conhecidos and it.get('tip_ite_codigo') == tipo[1]]
             if not orfaos:
@@ -200,7 +217,7 @@ def main():
             novo = r[0]
         ite = novo['amb_ite_codigo']
         reg[chave] = ite
-        reg_arq.write_text(json.dumps(reg, ensure_ascii=False, indent=1))
+        registrar(reg_arq, chave, ite)
         info = {t['tip_det_codigo']: t.get('tip_det_nome') for t in (novo.get('tipo_ambiente_item') or {}).get('tipos_detalhes') or []}
         tds = list(info) + [td for td in campos if td not in info]
         linhas = []

@@ -104,7 +104,9 @@ def opcoes_detalhe(max_idade_h=24):
     cache = TRAB / 'opcoes_detalhe.json'
     if not cache.exists() or time.time() - cache.stat().st_mtime > max_idade_h * 3600:
         TRAB.mkdir(parents=True, exist_ok=True)
-        cache.write_text(json.dumps(get('tipoDetalheDescricao'), ensure_ascii=False))
+        tmp = cache.with_suffix(f'.{os.getpid()}.tmp')   # troca atômica: agentes em paralelo não leem arquivo pela metade
+        tmp.write_text(json.dumps(get('tipoDetalheDescricao'), ensure_ascii=False))
+        os.replace(tmp, cache)
     m = {}
     for x in json.loads(cache.read_text()):
         if x.get('deleted_at'):
