@@ -27,6 +27,7 @@ import fcntl
 import html
 import json
 import os
+import re
 import sys
 import unicodedata
 
@@ -78,6 +79,20 @@ def main():
     amb_pos = [a['amb_codigo'] for a in pleno.ambientes_ordenados(d)].index(amb['amb_codigo'])
     rejeitados, feitos, pulados, erros = [], [], [], []
     esperado = {}  # (amb_ite_codigo, tip_det) -> [termos]
+    # Arquivo do agente leve (res_<idx>_padrao.json): só itens da classe padrão e nada de itens novos.
+    # Na 238 um leve gravou por engano num item de atenção (Elevador) e o forte não pôde mais corrigir sem ok.
+    so_padrao = None
+    m = re.match(r'res_(\d+)_padrao\.json$', os.path.basename(arq))
+    if m and (pasta / f'comodo_{m.group(1)}.json').exists():
+        tarefa = json.loads((pasta / f'comodo_{m.group(1)}.json').read_text())
+        so_padrao = {x['amb_ite_codigo'] for x in tarefa['itens'] if x['classe'] == 'padrao'}
+        fora = [e for e in res.get('itens', []) if e['amb_ite_codigo'] not in so_padrao]
+        for e in fora:
+            rejeitados.append((f"item {e['amb_ite_codigo']}", 'não é item padrão: o agente leve não grava itens de atenção (tire do JSON)'))
+        res['itens'] = [e for e in res.get('itens', []) if e['amb_ite_codigo'] in so_padrao]
+        if res.get('novos_itens'):
+            rejeitados.append(('novos_itens', 'o agente leve não cria itens novos (tire do JSON)'))
+            res['novos_itens'] = []
 
     def op(metodo, rota, corpo, desc):
         if simular:

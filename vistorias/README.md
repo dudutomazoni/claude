@@ -52,6 +52,13 @@ Códigos de campo: Material 1, Pintura 2, Cor 3, Funcionamento 4, Marca 5, Estad
   campo **Estado** de Parede, Teto, Porta e Rodapés. Quando o Eduardo disser que a pintura é nova, grave Estado "Pintura nova" e marque
   as avarias normalmente (226).
 - Baixar a vistoria no app mostra só as opções marcadas, mesmo sem nenhum preenchimento nosso (teste com a 214 em 27/10/2026): é do app.
+- Arquivo do agente leve (`res_<idx>_padrao.json`): o `gravar.py` recusa item que não é da classe padrão e itens novos (na 238 um
+  leve gravou por engano no Elevador, item de atenção, e o forte já não pôde corrigir sem ok).
+- Vários agentes criando itens ao mesmo tempo: o registro `novos_itens.json` é gravado com trava (sem ela um agente podia apagar o
+  registro do outro, e o item sairia duplicado quando o outro rodasse de novo).
+- Limite de uso de 5 h: com ~20 agentes fortes em paralelo ele estourou duas vezes na 238. O que já foi gravado fica no sistema; depois
+  do reinício retome cada agente com SendMessage (continua com o contexto) e confira os `res_*.json` com `gravar.py --simular`
+  (tudo "pulado" = já gravado).
 
 ## Histórico
 - 189 (One Tower 3701, saída): comparativo entrada × saída com planilha; finalizada pela equipe.
@@ -126,3 +133,10 @@ Códigos de campo: Material 1, Pintura 2, Cor 3, Funcionamento 4, Marca 5, Estad
   bruto, Cimento Queimado e Madeira; os agentes não sabiam e deixaram paredes amarelas/lilás só na nota (vocabulário corrigido).
   Rodado com o Agent tool, todos os cômodos em paralelo (limite de 20 agentes ao mesmo tempo); os suspeitos do leve foram passados
   ao forte do mesmo cômodo, sem agente extra.
+- 238 (Vivendas do Atlântico Casa 62A, entrada, 25–26/11): 23 cômodos, 370 itens, 354 preenchidos, 1924 gravações (1 erro 520 do site,
+  reparado com `reparar_opcoes.py --itens`); 47 criados (Sacadas 9 e 12, Despensa e Área externa 23 vieram sem itens; fora isso
+  fechadura digital, roteador, aparador, poltronas, sofá, corrimão, painéis, prendedores de porta, luminária e quadro do lavabo).
+  16 itens sem foto só com nota. Pedido "bem criterioso": os leves mandaram toda dúvida ao forte (60 itens: janelas contra a luz,
+  espelhos, persianas, luminárias); cômodos grandes divididos entre 2 ou 3 fortes por grupo de painéis (paredes/pisos × móveis);
+  até 3 rodadas de zoom com 12 fotos. Os 4 elevadores e as janelas (alumínio branco) conferidos entre cômodos. Marcas fora da lista:
+  ThyssenKrupp (elevadores), Gallant (bicicleta), Bticino (interruptor), Renna (tomada).
